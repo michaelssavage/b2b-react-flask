@@ -62,26 +62,19 @@ class Signin extends React.Component {
     onSubmit(event){
         event.preventDefault()
 
-        // const signin = {
-        //     name: this.state.name,
-        //     password: this.state.password
-        // }
+        const signin = {
+            name: this.state.name,
+            password: this.state.password
+        }
 
-        // axios.post("http://localhost:5000/login", signin)
-        // .then(response => { 
-        //     this.setState({
-        //     name:"",
-        //     password:"",
-        //     })
-        // })
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: 'React POST Request Example' })
-        };
-        fetch('http://localhost:3000/login', requestOptions)
-            .then(response => response.json())
-            .then(data => this.setState({ postId: 4352453 }));
+        axios.post("http://localhost:5000/login", signin)
+        .then(response => { 
+            this.setState({
+            name:"",
+            password:"",
+            })
+        })
+
     }
 
     render(){
