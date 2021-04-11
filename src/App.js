@@ -1,7 +1,9 @@
 import React from 'react';
-import Home from './Home.js'
-import Signin from './Signin.js'
-import Signup from './Signup.js'
+import Home from './pages/Home.js'
+import Signin from './pages/Signin.js'
+import Signup from './pages/Signup.js'
+import Products from './pages/Products.js'
+import Orders from './pages/Orders.js'
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
@@ -9,9 +11,12 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact component={Signin} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
+          <Route path="/home" component={Home} />
+          <Route path="/products" component={Products} />
+          <Route path="/orders" component={Orders} />
         </Switch>
       </div>
     </Router>
@@ -19,13 +24,3 @@ function App() {
 }
 
 export default App;
-
-// import React, {useState, useEffect} from 'react';
-
-//   const [currentTime, setCurrentTime] = useState(1);
-//   useEffect(() =>{
-//     fetch('/time').then(res => res.json()).then(data => {
-//       setCurrentTime(data.time);
-//     })
-//   }, []);
-//   <p>The current time is {currentTime}.</p>

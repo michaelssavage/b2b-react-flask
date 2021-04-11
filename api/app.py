@@ -1,5 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ def home():
 # Login as a specific customer ID
 @app.route("/login", methods=["POST"])
 def login():
-    return jsonify("Howdy")
+    return jsonify(f"Howdy")
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
 @app.route("/availability_future", methods=["GET"])
@@ -39,7 +40,6 @@ def check_orders():
 def delete_order():
     # might be used from check orders page
     return jsonify("Order Deleted")
-
 
 # File Not Found
 @app.errorhandler(404)
