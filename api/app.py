@@ -1,42 +1,44 @@
 from flask import Flask, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 # Routing a call to path "/" to this method (root endpoint)
-@app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
 def home():
     return jsonify("Hello and Welcome. This is the home page of our API!")
-    
-# Login as a specific customer ID
-@app.route("/login", methods=["POST"])
-def login():
-    return jsonify(f"Howdy")
+
+# Sign In as a specific customer ID
+@app.route("/api/signin", methods=["POST"])
+def signin():
+    print(request.json['password'])
+    return request.json['name']
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
-@app.route("/availability_future", methods=["GET"])
+@app.route("/api/availability_future", methods=["GET"])
 def availability_future():
     # some sort of chart may be useful here
     return jsonify("Plenty of stuff sir")
 
 # Check the available quantity of a product given a specified day and time.
-@app.route("/availability_check", methods=["POST"])
+@app.route("/api/availability_check", methods=["POST"])
 def availability_check():
     # need to parse quantity and product from json body
     return jsonify("Some weather hi")
 
-@app.route("/order", methods=["POST"])
+@app.route("/api/order", methods=["POST"])
 def order():
     # parse order details
     return jsonify("Order Received")
 
-@app.route("/check_orders", methods=["GET"])
+@app.route("/api/check_orders", methods=["GET"])
 def check_orders():
     # parse and return order file
     return jsonify("Order Received")
 
-@app.route("/delete_order", methods=["GET"])
+@app.route("/api/delete_order", methods=["GET"])
 def delete_order():
     # might be used from check orders page
     return jsonify("Order Deleted")

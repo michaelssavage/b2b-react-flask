@@ -29,13 +29,20 @@ export default function Orders() {
 
     const classes = useStyles();
 
-    const [product, setProduct] = useState("");
+    const [order, setOrder] = useState("");
 
-    useEffect(async () => {
-        const result = await axios('/check_orders',
-        );
-        setProduct(result.data);
-    }, []);
+    const getOrder = async () => {
+        try{
+            const result = await axios.get('/check_orders')
+            setOrder(result.data);
+        
+        }catch(err){
+            console.error(err.message);
+        }
+    };
+
+    useEffect(()=>{
+        getOrder()},[])
 
     return (
         <>
@@ -45,7 +52,7 @@ export default function Orders() {
                     <div 
                         className={classes.paper}
                     >
-                        {product}
+                        {order}
                     </div>
             </Container>
         </>

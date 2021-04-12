@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -37,6 +37,28 @@ export default function SignIn() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
+    function handleSubmit(event){
+        event.preventDefault()
+        // console.log( 'name:', name, 'Password: ', password); 
+        sendLogin()
+    }
+
+    const sendLogin = () => {
+
+        axios.post('http://localhost:5000/api/signin', {
+
+            withCredentials: true,
+            name: {name},
+            password: {password}
+        })
+        .then((response) => {
+            console.log(response);
+
+        }, (error) => {
+            console.log(error);
+        });
+    }
+
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -49,7 +71,7 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                 Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={handleSubmit}>
 
 
                     {/*Username*/}
@@ -64,7 +86,7 @@ export default function SignIn() {
                         autoComplete="username"
                         autoFocus
                         value= {name}
-                        onChange= {e => setName(e.target.value)}
+                        onInput= {e => setName(e.target.value)}
                     />
 
 
@@ -80,13 +102,14 @@ export default function SignIn() {
                         id="password"
                         autoComplete="current-password"
                         value={password}
-                        onChange= {e => setPassword(e.target.value)}
+                        onInput= {e => setPassword(e.target.value)}
                     />
 
 
                     {/*Sign in button*/}
                     <Button
                         fullWidth
+                        type="submit"
                         variant="contained"
                         color="primary"
                         className={classes.submit}

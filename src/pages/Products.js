@@ -31,11 +31,19 @@ export default function Products() {
 
     const [product, setProduct] = useState("");
 
-    useEffect(async () => {
-        const result = await axios('/check_orders',
-        );
-        setProduct(result.data);
-    }, []);
+    useEffect(()=>{
+        getProducts()
+    },[])
+
+    const getProducts = async () => {
+        try{
+            const result = await axios.get('/availability_future')
+            setProduct(result.data);
+        
+        }catch(err){
+            console.error(err.message);
+        }
+    };
 
     return (
         <>

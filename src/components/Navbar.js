@@ -22,22 +22,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
     const classes = useStyles();
-    const preventDefault = (event) => event.preventDefault();
 
     return (
         <div className={classes.root}>
         <AppBar position="static">
             <Toolbar>
             <Typography variant="h6" className={classes.title}>
-                <Link href="home" color="text.primary">
+                <Link href="home" color="inherit">
                 Home
                 </Link>
             </Typography> 
-            <Link href="orders" color="text.primary">
+            <Link href="orders" color="inherit">
                 <Button color="inherit">Orders</Button>
             </Link>
 
-            <Link href="signin" color="text.primary">
+            <Link href="signin" color="inherit">
                 <Button color="inherit">Sign out</Button>
             </Link>
             </Toolbar>
