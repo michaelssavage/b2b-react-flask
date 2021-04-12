@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, json
+from flask import Flask, jsonify, request, json, session, redirect,url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
 from api.loginHandler import LoginHandler
 
 app = Flask(__name__)
+app.secret_key = "any random string"
 cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 loginHandler = LoginHandler()
 
@@ -18,6 +19,10 @@ def login():
     name = request.json['name']
     password = request.json['password']
     loginHandler.checkLogin(name['name'], password['password'])
+
+    session.clear()
+    session['username'] = name['name']
+    #return a session token or cookie????
     return ""
 
 # Sign In as a specific customer ID
