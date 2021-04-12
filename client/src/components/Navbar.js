@@ -36,7 +36,7 @@ export default function Navbar() {
                 <Button color="inherit">Orders</Button>
             </Link>
 
-            <Link href="signin" color="inherit">
+            <Link href="login" color="inherit">
                 <Button color="inherit">Sign out</Button>
             </Link>
             </Toolbar>
