@@ -1,6 +1,6 @@
 import React from 'react';
 import Home from './pages/Home.js'
-import Signin from './pages/Signin.js'
+import Login from './pages/Login.js'
 import Signup from './pages/Signup.js'
 import Products from './pages/Products.js'
 import Orders from './pages/Orders.js'
@@ -11,8 +11,8 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route path="/" exact component={Signin} />
-          <Route path="/signin" component={Signin} />
+          <Route path="/" exact component={Login} />
+          <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/home" component={Home} />
           <Route path="/products" component={Products} />

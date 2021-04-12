@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, json
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
+from api.loginHandler import LoginHandler
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+loginHandler = LoginHandler()
 
 # Routing a call to path "/" to this method (root endpoint)
 @app.route("/api", methods=["GET"])
@@ -11,10 +13,20 @@ def home():
     return jsonify("Hello and Welcome. This is the home page of our API!")
 
 # Sign In as a specific customer ID
-@app.route("/api/signin", methods=["POST"])
-def signin():
-    print(request.json['password'])
-    return request.json['name']
+@app.route("/api/login", methods=["POST"])
+def login():
+    name = request.json['name']
+    password = request.json['password']
+    loginHandler.checkLogin(name['name'], password['password'])
+    return ""
+
+# Sign In as a specific customer ID
+@app.route("/api/signup", methods=["POST"])
+def signup():
+    name = request.json['name']
+    password = request.json['password']
+    loginHandler.signUp(name['name'], password['password'])
+    return ""
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
 @app.route("/api/availability_future", methods=["GET"])

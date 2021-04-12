@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignIn() {
+export default function Login() {
     const classes = useStyles();
 
     const [name, setName] = useState("");
@@ -45,7 +45,7 @@ export default function SignIn() {
 
     const sendLogin = () => {
 
-        axios.post('http://localhost:5000/api/signin', {
+        axios.post('http://localhost:5000/api/login', {
 
             withCredentials: true,
             name: {name},
@@ -69,7 +69,7 @@ export default function SignIn() {
                 </Avatar>
 
                 <Typography component="h1" variant="h5">
-                Sign in
+                Login
                 </Typography>
                 <form className={classes.form} noValidate onSubmit={handleSubmit}>
 
@@ -114,7 +114,7 @@ export default function SignIn() {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign In
+                        Login
                     </Button>
 
 
