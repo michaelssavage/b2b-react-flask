@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&display=swap');
+
+body{
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.1em; }
+
+footer{
+    font-size: 1em; }
+    
+.check_availability {
+    background-color: #90CCF4;
+}
+
+.place_order {
+    background-color: #4ABF93;
+}
