@@ -1,6 +1,7 @@
 import json
 import csv
 import random
+import pandas as pd
 
 orders_file = "./orders/orders.csv"
 
@@ -26,21 +27,24 @@ class Order:
         return order
 
     def toCSV(self):
-        order = [self.order_id, self.customer_id, self.product, self.quantity, self.date]
+        order = [self.customer_id, self.order_id, self.product, self.quantity, self.date]
         return order
 
     # TODO better way of picking order numbers
+    # maybe use row count of orders related to cutomer id
     def getOrderID(self):
         num = random.randint(1,100)
-        return self.customer_id + str(num)
+        return num
 
 def getUserOrders(customer_id):
-    with open(orders_file, "r") as orders_csv:
-        try:
-            data = json.load(orders_csv)
-            return data[customer_id]
-        except Exception:
-            return "No orders for this user :("
+    df = pd.read_csv(orders_file)
+    try:
+        df = df.loc[df['customerID'] == customer_id]
+        # specify the way to print
+        return df.to_json(orient='records')
+    except Exception:
+        return "No orders for this user :("
+
 
 def placeOrder(order):
     with open(orders_file, "a", newline="") as orders_csv:
@@ -48,23 +52,17 @@ def placeOrder(order):
         orders_writer.writerow(order.toCSV())
         return "success"
 
-                
-# Order Schema:
-#     {
-#     "user42": [
-#         {
-#             "date": "14/02/2021",
-#             "product": "game boy",  
-#             "quantity": 2
-#         },
-#         {
-#             "date": "04/03/2021",
-#             "product": "game boy",  
-#             "quantity": 2
-#         }
-#     ]
-# }
+
+def deleteUserOrder(customer_ID, order_ID):
+    df = pd.read_csv(orders_file)
+    try:
+        df.drop(df.loc[(df['customerID'] == customer_ID) & (df['orderID'] == order_ID)].index, inplace=True)
+        df.to_csv(orders_file, index = False, sep=',')
+        return "Success"
+    except Exception:
+        return "No orders to delete for this user :("
 
 
-# if __name__ == '__main__':
-#     search_price()
+if __name__ == '__main__':
+    # print(getUserOrders("user4"))
+    print(deleteUserOrder("user4", 5))

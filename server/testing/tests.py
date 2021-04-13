@@ -19,8 +19,13 @@ def add_new_user():
     r = requests.post('http://127.0.0.1:5000/api/add_customer', json={"customer_id" : "test1", "password": "pass"})
     print(r.content)
 
+def delete_order():
+    r = requests.post('http://127.0.0.1:5000/api/delete_order', json={"customer_id" : "user4", "orderID": 3})
+    print(r.content)
+
 
 if __name__ == '__main__':
-    test_place_order()
+    # test_place_order()
     # add_new_user()
     # get_orders()
+    delete_order()

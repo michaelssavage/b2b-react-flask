@@ -94,17 +94,16 @@ def place_order():
     else:
         return jsonify("Error, POST requests only please")
 
+# https://datatofish.com/export-pandas-dataframe-json/
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
     if (request.method == 'POST'):
-        try:
-            # parse and return order file
-            data = request.get_json()
-            customer_id = data['customer_id']
+        # parse and return order file
+        data = request.get_json()
+        customer_id = data['customer_id']
 
-            return jsonify(Order.getUserOrders(customer_id))
-        except:
-            return jsonify("Error, sorry")
+        Order.getUserOrders(customer_id)
+
 
     else:
         return jsonify("Error, POST requests only please")
@@ -113,11 +112,12 @@ def check_orders():
 @app.route("/api/delete_order", methods=["POST"])
 def delete_order():
     if (request.method == 'POST'):
-        # parse delete request
+        # parse and return order file
         data = request.get_json()
+        customer_id = data['customer_id']
+        order_ID = data['orderID']
 
-    # might be used from check orders page
-    return jsonify("Order Deleted")
+        return jsonify(Order.deleteUserOrder(customer_id, order_ID))
 
 
 @app.route("/api/add_customer", methods=["POST"])
