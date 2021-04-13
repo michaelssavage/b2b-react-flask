@@ -10,26 +10,28 @@ const productCard = ({ product }) => {
             <Card className='my-3 p-3 rounded text-center shadow p-3 mb-5 bg-white rounded' style={{ border: 'none' }}>
 
 
-                <Card.Body className={`${product.types[0].type.name} rounded text-black`}>
+                <Card.Body className={`${product.name} rounded text-black`}>
 
                         <Card.Title as='div'>
-                            #{product.id}: {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+                            {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
                         </Card.Title>
 
                         <Card.Text> 
-                            {/*
-                            product.stock_quantity
-                            product.monthly_restock_date
-                            product.restock_quantity
-                            */}
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
+                            Stock Quantity: {product.stock_quantity}
+                        </Card.Text>
+
+                        <Card.Text> 
+                            Monthly Restock Date: {product.monthly_restock_date}
+                        </Card.Text>
+
+                        <Card.Text> 
+                            Restock Quantity: {product.restock_quantity}
                         </Card.Text>
 
                 </Card.Body>
                 <div className="pt-2">
                     <Link href="products" color="inherit">
-                        <Button variant="info">Find Out More!</Button>   
+                        <Button variant="info">Order!</Button>   
                     </Link>
                 </div>
             </Card>

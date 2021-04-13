@@ -19,7 +19,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "e
 # login_manager.init_app(app)
 
 # Routing a call to path "/" to this method (root endpoint)
-@app.route("/", methods=["GET"])
+@app.route("/api/products", methods=["GET"])
 def home():
     # read products file
     if (request.method == 'GET'):
@@ -30,7 +30,7 @@ def home():
 
 
 # Login as a specific customer ID
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     if (request.method == 'POST'):
         data = request.get_json()
@@ -39,7 +39,7 @@ def login():
 
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
-@app.route("/availability_future", methods=["GET"])
+@app.route("/api/availability_future", methods=["GET"])
 def check_availability_future():
     if (request.method == 'GET'):
         # some sort of chart may be useful here
@@ -47,7 +47,7 @@ def check_availability_future():
 
 
 # Check the available quantity of a product given a specified day and time.
-@app.route("/availability_check", methods=["GET"])
+@app.route("/api/availability_check", methods=["GET"])
 def check_availability():
     if (request.method == 'GET'):
         # need to parse quantity and product from json body
@@ -55,7 +55,7 @@ def check_availability():
 
 
 # Place order
-@app.route("/order", methods=["POST"])
+@app.route("/api/order", methods=["POST"])
 def place_order():
     if (request.method == 'POST'):
         # parse order details
@@ -83,7 +83,7 @@ def place_order():
     return jsonify("Order Received, Thank you")
 
 
-@app.route("/check_orders", methods=["POST"])
+@app.route("/api/check_orders", methods=["POST"])
 def check_orders():
     if (request.method == 'POST'):
         # parse and return order file
@@ -96,7 +96,7 @@ def check_orders():
         return jsonify("Error, POST requests only please")
     
 
-@app.route("/delete_order", methods=["POST"])
+@app.route("/api/delete_order", methods=["POST"])
 def delete_order():
     if (request.method == 'POST'):
         # parse delete request
@@ -105,7 +105,7 @@ def delete_order():
     # might be used from check orders page
     return jsonify("Order Deleted")
 
-@app.route("/add_customer", methods=["POST"])
+@app.route("/api/add_customer", methods=["POST"])
 def add_user():
     if (request.method == 'POST'):        
         data = request.get_json()
@@ -123,7 +123,7 @@ def add_user():
 # File Not Found
 @app.errorhandler(404)
 def page_not_found(e):
-    return jsonify("ERRPR: The resource could not be found")
+    return jsonify("ERROR: The resource could not be found")
 
 # Server Error
 @app.errorhandler(500)
