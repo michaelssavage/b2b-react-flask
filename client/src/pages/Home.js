@@ -15,7 +15,7 @@ const Home = () => {
         for(let i = 1; i <= 6; i ++){
             productArray.push(await getProductData(i));
         }
-        
+
         setProduct(productArray);
     }
 
@@ -24,7 +24,7 @@ const Home = () => {
 
         {/*const result = await axios.get('http://localhost:5000/products) */}
 
-        {/*result.data[{i}]*/}
+        {/*for product in products result.products[{i}]*/}
         return res
     }
 

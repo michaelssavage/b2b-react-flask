@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
+import Link from '@material-ui/core/Link';
 
 const productCard = ({ product }) => {
 
@@ -27,7 +28,9 @@ const productCard = ({ product }) => {
 
                 </Card.Body>
                 <div className="pt-2">
-                    <Button variant="info">Find Out More!</Button> 
+                    <Link href="products" color="inherit">
+                        <Button variant="info">Find Out More!</Button>   
+                    </Link>
                 </div>
             </Card>
         </>

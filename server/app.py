@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 import json
 import csv
 
@@ -11,6 +12,7 @@ import datetime
 # from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 # login stuff, needs to be implemented
 # login_manager = LoginManager()
