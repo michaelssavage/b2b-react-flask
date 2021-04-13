@@ -21,7 +21,11 @@ const Home = () => {
 
     const getProductData = async (id) => {
         const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`); {/* this needs to be changed to the product apis */}
-        return res;
+
+        {/*const result = await axios.get('http://localhost:5000/products) */}
+
+        {/*result.data[{i}]*/}
+        return res
     }
 
     useEffect(() => {

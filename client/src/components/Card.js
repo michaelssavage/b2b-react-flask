@@ -27,8 +27,7 @@ const productCard = ({ product }) => {
 
                 </Card.Body>
                 <div className="pt-2">
-                    <Button variant="info">Check Availability</Button> 
-                    <Button variant="success">Place An Order</Button>{' '}
+                    <Button variant="info">Find Out More!</Button> 
                 </div>
             </Card>
         </>

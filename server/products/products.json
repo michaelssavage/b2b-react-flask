@@ -1,8 +1,0 @@
-{
-    "products":[
-        { "name": "game boy", "stock_quantity": 500, "monthly_restock_date": 1, "restock_quantity": 45},
-        { "name": "apples", "stock_quantity": 3500, "monthly_restock_date": 11, "restock_quantity": 450},
-        { "name": "oranges", "stock_quantity": 400, "monthly_restock_date": 10, "restock_quantity": 5645},
-        { "name": "jolt cola", "stock_quantity": 4000, "monthly_restock_date": 21, "restock_quantity": 3445}
-    ]
-}
