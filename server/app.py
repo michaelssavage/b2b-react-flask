@@ -3,20 +3,37 @@ from flask_cors import CORS, cross_origin
 import json
 import csv
 
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
+
 # Custom packages
 import users
 from orders import Order
 import products
 import datetime
 
-# from werkzeug.security import generate_password_hash, check_password_hash
+users = {
+    "john": generate_password_hash("hello"),
+    "susan": generate_password_hash("bye")
+}
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
-# login stuff, needs to be implemented
-# login_manager = LoginManager()
-# login_manager.init_app(app)
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and \
+            check_password_hash(users.get(username), password):
+        return username
+
+
+@app.route('/')
+@auth.login_required
+def index():
+    return "Hello, {}!".format(auth.current_user())
+
 
 # Routing a call to path "/" to this method (root endpoint)
 @app.route("/api/products", methods=["GET"])
@@ -71,26 +88,23 @@ def place_order():
         
         cust_order = Order.Order(customer_id, product, order_date.strftime("%d/%m/%Y"), quantity)
         
-        # store in file
-        with open("./orders/orders.json", "a") as orders_file:
-            # find user in file
-            # TODO
-            json.dump(cust_order.toJSON(), orders_file, indent=4)
+        result = Order.placeOrder(cust_order)
+        return jsonify(result)
 
     else:
         return jsonify("Error, POST requests only please")
-    
-    return jsonify("Order Received, Thank you")
-
 
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
     if (request.method == 'POST'):
-        # parse and return order file
-        data = request.get_json()
-        customer_id = data['customer_id']
+        try:
+            # parse and return order file
+            data = request.get_json()
+            customer_id = data['customer_id']
 
-        return jsonify(get_orders(customer_id))
+            return jsonify(Order.getUserOrders(customer_id))
+        except:
+            return jsonify("Error, sorry")
 
     else:
         return jsonify("Error, POST requests only please")
@@ -104,6 +118,7 @@ def delete_order():
 
     # might be used from check orders page
     return jsonify("Order Deleted")
+
 
 @app.route("/api/add_customer", methods=["POST"])
 def add_user():
@@ -134,17 +149,6 @@ def server_error(e):
 @app.errorhandler(501)
 def not_implemented(e):
     return jsonify("ERROR: This URL does not accept the HTTP request sent")
-
-
-
-# TODO: need to change this to get the id of a logged in user
-def get_orders(customer_id):
-    with open("./orders/orders.json", "r") as json_file:
-        try:
-            data = json.load(json_file)
-            return data[customer_id]
-        except:
-            return "No orders for this user"
 
 
 def add_new_customer(customer_id, password):
