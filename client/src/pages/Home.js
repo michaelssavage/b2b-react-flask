@@ -27,9 +27,6 @@ const Home = () => {
     setProduct(productsArr)
     }
 
-
-
-
     useEffect(() => {
         getProduct();
     }, [])
@@ -37,11 +34,14 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <Container component="main" maxWidth="s">  
-                <Typography align="center" variant="h2"> 
-                    Concurr B2B ordering service
+            <Container component="main" maxWidth="xs" className="mt-5">  
+                <Typography align="center" variant="h3"> 
+                    Concurr B2B Order System
                 </Typography>
+            </Container>
+            
 
+            <Container component="main" maxWidth="s"> 
                 <Row>
                     {product.map( p =>(
 
@@ -51,8 +51,6 @@ const Home = () => {
                         </Col>
                     ))}
                 </Row>
-
-
             </Container>
         </>
     );

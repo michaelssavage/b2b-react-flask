@@ -1,4 +1,6 @@
 Flask
 requests
 flask-login
-flask_cors
+Flask-Cors
+Flask-HTTPAuth
+pandas

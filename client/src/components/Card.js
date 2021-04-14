@@ -1,38 +1,28 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button'
-import Link from '@material-ui/core/Link';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const productCard = ({ product }) => {
 
     return (
         <>
-            <Card className='my-3 p-3 rounded text-center shadow p-3 mb-5 bg-white rounded' style={{ border: 'none' }}>
-
+            <Card className='pt-3 my-3 rounded text-center shadow-lg bg-white rounded' style={{ border: 'none' }}>
 
                 <Card.Body className={`${product.name} rounded text-black`}>
 
-                        <Card.Title as='div'>
+                        <Card.Title className="font-weight-bold" component="h1">
                             {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
                         </Card.Title>
 
-                        <Card.Text> 
-                            Stock Quantity: {product.stock_quantity}
-                        </Card.Text>
-
-                        <Card.Text> 
-                            Monthly Restock Date: {product.monthly_restock_date}
-                        </Card.Text>
-
-                        <Card.Text> 
-                            Restock Quantity: {product.restock_quantity}
-                        </Card.Text>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>Stock Quantity: {product.stock_quantity}</ListGroup.Item>
+                            <ListGroup.Item>Monthly Restock Date: {product.monthly_restock_date}</ListGroup.Item>
+                            <ListGroup.Item>Restock Quantity: {product.restock_quantity}</ListGroup.Item>
+                        </ListGroup>
 
                 </Card.Body>
-                <div className="pt-2">
-                    <Link href="products" color="inherit">
-                        <Button variant="info">Order!</Button>   
-                    </Link>
+                <div className="p-3 bg-color text-white text-left font-weight-bold">
+                    Check Availability: 
                 </div>
             </Card>
         </>
