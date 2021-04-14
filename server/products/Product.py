@@ -7,3 +7,11 @@ class Product:
 
     def getproductDetails(self):
         pass 
+
+
+def updateProductStock():
+    # open stock file and reduce by number specified in order
+
+def getFutureAvailability(product):
+    # open orders and sum all orders for a specific file
+    # then minus this 

@@ -24,18 +24,15 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "e
 
 @auth.verify_password
 def verify_password(username, password):
-    if username in users and \
-            check_password_hash(users.get(username), password):
+    if username in users and check_password_hash(users.get(username), password):
         return username
-
 
 @app.route('/')
 @auth.login_required
 def index():
-    return "Hello, {}!".format(auth.current_user())
+    return jsonify("Hello, {}!".format(auth.current_user()))
 
 
-# Routing a call to path "/" to this method (root endpoint)
 @app.route("/api/products", methods=["GET"])
 def home():
     # read products file
