@@ -39,17 +39,15 @@ export default function Login() {
 
     function handleSubmit(event){
         event.preventDefault()
-        // console.log( 'name:', name, 'Password: ', password); 
+        console.log( 'name:', name, 'Password: ', password); 
         sendLogin()
     }
 
     const sendLogin = () => {
-
         axios.post('http://localhost:5000/api/login', {
-
             withCredentials: true,
-            name: {name},
-            password: {password}
+            name: name,
+            password: password
         })
         .then((response) => {
             console.log(response);
