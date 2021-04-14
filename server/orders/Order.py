@@ -47,27 +47,27 @@ def getUserOrders(customer_id):
 
 
 def placeOrder(order):
-    df_orders = pd.read_csv(orders_file)
     df_products = pd.read_csv(products_file)
-
+    # order details
     product = order.product
     quantity = order.quantity
+    # stock details
+    product_row_num = df_products[df_products['productName'] == product].index[0]
+    stock_level = df_products.loc[product_row_num]['stock_quantity']
 
-    df_products = df_products.loc[df_products['productName'] == product]
-    
     # check if sufficient stock available to filfill order
-    if df_products['stock_quantity'].values[0] - quantity > 0:
-        return "Order Successful, sufficient stock"
+    if stock_level - quantity > 0:
+        # add order to orders file
+        with open(orders_file, "a", newline="") as orders_csv:
+            orders_writer = csv.writer(orders_csv, delimiter=',')
+            orders_writer.writerow(order.toCSV())
+
+        new_stock_level = stock_level - quantity
+        df_products.at[product_row_num, 'stock_quantity'] = new_stock_level
+        df_products.to_csv(products_file, index = False, sep=',')
+        return "Order Successful, sufficient stock!"
     else:
-        return "Sorry, not enough stock to fulfill your order"
-
-
-
-    # with open(orders_file, "a", newline="") as orders_csv:
-    #     df 
-    #     orders_writer = csv.writer(orders_csv, delimiter=',')
-    #     orders_writer.writerow(order.toCSV())
-    #     return "success"
+        return "Sorry, not enough stock to fulfill your order!"
 
 
 def deleteUserOrder(customer_ID, order_ID):
@@ -81,10 +81,13 @@ def deleteUserOrder(customer_ID, order_ID):
     except Exception:
         return "No orders to delete for this user :("
 
+def localPlaceOrder():
+    order_date = datetime.datetime(datetime.datetime.now().year, 3, 1)
+    print(placeOrder(Order("user43", "apples", order_date.strftime("%d/%m/%Y"),200)))
+
 
 if __name__ == '__main__':
     # print(getUserOrders("user4"))
     # print(deleteUserOrder("user4", 5))
 
-    order_date = datetime.datetime(datetime.datetime.now().year, 3, 1)
-    print(placeOrder(Order("user43", "apples", order_date.strftime("%d/%m/%Y"),4000)))
+
