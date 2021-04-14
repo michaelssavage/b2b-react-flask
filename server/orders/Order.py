@@ -4,8 +4,8 @@ import random
 import pandas as pd
 import datetime
 
-orders_file = "./orders/orders.csv"
-products_file = "./products/products.csv"
+orders_file = "orders.csv"
+products_file = "../products/products.csv"
 
 class Order:
     def __init__(self, customer_id, product, date, quantity):
@@ -56,12 +56,13 @@ def placeOrder(order):
     stock_level = df_products.loc[product_row_num]['stock_quantity']
 
     # check if sufficient stock available to filfill order
-    if stock_level - quantity > 0:
+    if stock_level - quantity >= 0:
         # add order to orders file
         with open(orders_file, "a", newline="") as orders_csv:
             orders_writer = csv.writer(orders_csv, delimiter=',')
             orders_writer.writerow(order.toCSV())
 
+        # update stock
         new_stock_level = stock_level - quantity
         df_products.at[product_row_num, 'stock_quantity'] = new_stock_level
         df_products.to_csv(products_file, index = False, sep=',')
@@ -71,23 +72,37 @@ def placeOrder(order):
 
 
 def deleteUserOrder(customer_ID, order_ID):
-    df = pd.read_csv(orders_file)
+    df_orders = pd.read_csv(orders_file)
+    df_products = pd.read_csv(products_file)
+
     try:
+    # locate the customers order and details
+        order = df_orders.loc[(df_orders['customerID'] == customer_ID) & (df_orders['orderID'] == order_ID)]
+        product = order['product'].item()
+        quantity = order['quantity'].item()
+
+        product_row_num = df_products[df_products['productName'] == product].index[0]
+        stock_level = df_products.loc[product_row_num]['stock_quantity']
+
+        # return stock to available
+        new_stock_level = stock_level + quantity
+        df_products.at[product_row_num, 'stock_quantity'] = new_stock_level
+        df_products.to_csv(products_file, index = False, sep=',')
+
         # delete the order row
-        df.drop(df.loc[(df['customerID'] == customer_ID) & (df['orderID'] == order_ID)].index, inplace=True)
+        df_orders.drop(order.index, inplace=True)
         # rewrite back to file
-        df.to_csv(orders_file, index = False, sep=',')
-        return "Success"
+        df_orders.to_csv(orders_file, index = False, sep=',')
+        return "Success, order successfully deleted"
     except Exception:
-        return "No orders to delete for this user :("
+        return "Error :("
 
 def localPlaceOrder():
     order_date = datetime.datetime(datetime.datetime.now().year, 3, 1)
-    print(placeOrder(Order("user43", "apples", order_date.strftime("%d/%m/%Y"),200)))
+    print(placeOrder(Order("user43", "jolt cola", order_date.strftime("%d/%m/%Y"), 200)))
 
 
 if __name__ == '__main__':
     # print(getUserOrders("user4"))
-    # print(deleteUserOrder("user4", 5))
-
-
+    print(deleteUserOrder("user43", 97))
+    # localPlaceOrder()

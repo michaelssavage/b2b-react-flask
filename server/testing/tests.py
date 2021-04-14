@@ -20,7 +20,7 @@ def add_new_user():
     print(r.content)
 
 def delete_order():
-    r = requests.post('http://127.0.0.1:5000/api/delete_order', json={"customer_id" : "user4", "orderID": 3})
+    r = requests.post('http://127.0.0.1:5000/api/delete_order', json={"customer_id" : "user43", "orderID": 97})
     print(r.content)
 
 
