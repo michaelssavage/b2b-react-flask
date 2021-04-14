@@ -42,8 +42,8 @@ def delete_order():
     r = requests.post(
         'http://127.0.0.1:5000/api/delete_order', 
         json={
-            "customerID" : "user43", 
-            "orderID": 23
+            "customerID" : "user4", 
+            "orderID": 7
             }
         )
     print(r.content)
@@ -51,6 +51,6 @@ def delete_order():
 
 if __name__ == '__main__':
     # test_place_order()
-    add_new_user()
+    # add_new_user()
     # get_orders()
-    # delete_order()
+    delete_order()
