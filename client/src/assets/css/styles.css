@@ -7,10 +7,13 @@ body{
 footer{
     font-size: 1em; }
     
-.check_availability {
-    background-color: #90CCF4;
+
+.bg-color {
+    background-color: #009688
+    ;
 }
 
-.place_order {
-    background-color: #4ABF93;
+.table-color {
+    background-color: #e91e63
+
 }

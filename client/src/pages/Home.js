@@ -11,17 +11,20 @@ const Home = () => {
     const [product, setProduct] = useState([]);
 
     const getProduct = async () => {
-        let productArray = [];
-        for(let i = 1; i <= 6; i ++){
-            productArray.push(await getProductData(i));
-        }
-        
-        setProduct(productArray);
-    }
 
-    const getProductData = async (id) => {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`); {/* this needs to be changed to the product apis */}
-        return res;
+        const res = await axios.get('http://localhost:5000/api/products');
+        // console.log(res.data.products)
+
+        const productsArray = res.data.products
+
+        let productsArr = [];
+        for(let i = 0; i < productsArray.length; i++){
+            productsArr.push(productsArray[i])
+
+        }
+    
+    // console.log(productsArr)
+    setProduct(productsArr)
     }
 
     useEffect(() => {
@@ -31,23 +34,23 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <Container component="main" maxWidth="s">  
-                <Typography align="center" variant="h2"> 
-                    Concurr B2B ordering service
+            <Container component="main" maxWidth="xs" className="mt-5">  
+                <Typography align="center" variant="h3"> 
+                    Concurr B2B Order System
                 </Typography>
+            </Container>
+            
 
-
+            <Container component="main" maxWidth="s"> 
                 <Row>
                     {product.map( p =>(
 
-                        <Col key={p.data.name} xs={12} sm={12} md={4} lg={4} xl={4}>
+                        <Col key={p.name} xs={12} sm={12} md={6} lg={6} xl={6}>
 
-                            <Card product={p.data}/>
+                        <Card product={p}/>
                         </Col>
                     ))}
                 </Row>
-
-
             </Container>
         </>
     );

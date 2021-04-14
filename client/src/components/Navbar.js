@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
+    home: {
+        flexGrow: 2
+    },
+
     title: {
         flexGrow: 2
     },
@@ -27,18 +31,25 @@ export default function Navbar() {
         <div className={classes.root}>
         <AppBar position="static">
             <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-                <Link href="home" color="inherit">
-                Home
-                </Link>
-            </Typography> 
-            <Link href="orders" color="inherit">
-                <Button color="inherit">Orders</Button>
-            </Link>
 
-            <Link href="login" color="inherit">
-                <Button color="inherit">Sign out</Button>
-            </Link>
+                <Typography variant="h6" className={classes.home}>
+                    <Link href="home" color="inherit">
+                    Home
+                    </Link>
+                </Typography> 
+                
+                <Link href="orders" color="inherit">
+                    <Button color="inherit">
+                        My Orders
+                    </Button>
+                </Link>
+
+                <Link href="login" color="inherit">
+                    <Button color="inherit">
+                        Sign out
+                    </Button>
+                </Link>
+
             </Toolbar>
         </AppBar>
         </div>
