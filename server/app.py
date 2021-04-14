@@ -2,6 +2,10 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import json
 import csv
+import threading
+
+global lck
+lck = threading.Lock()
 
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
