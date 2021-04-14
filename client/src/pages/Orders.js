@@ -65,12 +65,24 @@ export default function Orders() {
 
     const classes = useStyles();
 
-    const [order, setOrder] = useState("");
-
+    // const [order, setOrder] = useState("");
+    let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        }
+    };
+    
     const getOrder = async () => {
         try{
-            const result = await axios.get('/check_orders')
-            setOrder(result.data);
+            const res = await axios.post(
+                'http://localhost:5000/api/check_orders', 
+                { 
+                    "customer_id": "user4"
+                },
+                axiosConfig);
+
+            console.log(res);
         
         }catch(err){
             console.error(err.message);
@@ -90,7 +102,7 @@ export default function Orders() {
                 </Typography>
             </Container>
 
-            <Container component="main" maxWidth="s" className="mt-5">  
+            <Container component="main" maxWidth="md" className="mt-5">  
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
 

@@ -12,20 +12,23 @@ const Home = () => {
 
     const getProduct = async () => {
 
-        const res = await axios.get('http://localhost:5000/api/products');
-        // console.log(res.data.products)
+        try{
+            const res = await axios.get('http://localhost:5000/api/products');
+            // console.log(res.data.products)
 
-        const productsArray = res.data.products
+            const productsArray = res.data.products;
 
-        let productsArr = [];
-        for(let i = 0; i < productsArray.length; i++){
-            productsArr.push(productsArray[i])
+            let productsArr = [];
+            for(let i = 0; i < productsArray.length; i++){
+                productsArr.push(productsArray[i]);
+            }
+            // console.log(productsArr)
+            setProduct(productsArr);
 
+        }catch(err){
+            console.error(err.message);
         }
-    
-    // console.log(productsArr)
-    setProduct(productsArr)
-    }
+    };
 
     useEffect(() => {
         getProduct();
@@ -40,8 +43,7 @@ const Home = () => {
                 </Typography>
             </Container>
             
-
-            <Container component="main" maxWidth="s"> 
+            <Container component="main" maxWidth="md"> 
                 <Row>
                     {product.map( p =>(
 

@@ -100,8 +100,7 @@ def check_orders():
         data = request.get_json()
         customer_id = data['customer_id']
 
-        Order.getUserOrders(customer_id)
-
+        return Order.getUserOrders(customer_id)
 
     else:
         return jsonify("Error, POST requests only please")
