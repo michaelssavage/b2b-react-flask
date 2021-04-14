@@ -12,6 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import Button from "@material-ui/core/Button";
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -40,49 +42,44 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function createData(name, date, quantity, restock, edit) {
-    return { name, date, quantity, restock, edit };
+function createData(product, orderID, date, quantity, edit) {
+    return { product, orderID, date, quantity, edit };
 }
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-// const res = await axios.get('http://localhost:5000/api/products');
-// const productsArray = res.data.products
-// const rows = [];
-{/*for (let i = 0; i < productsArray.length){
-
-    if user == logged in user:
-        rows.push(productsArray[i])
-} */}
 
 export default function Orders() {
 
     const classes = useStyles();
 
-    // const [order, setOrder] = useState("");
-    let axiosConfig = {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            "Access-Control-Allow-Origin": "*",
-        }
+    const [orders, setOrders] = useState([]);
+
+    const user = { 
+        customer_id: "user4"
     };
     
     const getOrder = async () => {
         try{
             const res = await axios.post(
                 'http://localhost:5000/api/check_orders', 
-                { 
-                    "customer_id": "user4"
-                },
-                axiosConfig);
+                user
+                );
 
-            console.log(res);
+            // console.log(res.data);
+
+            const productsArray = res.data;
+            // console.log(productsArray);
+
+            let orderList = [];
+            for(let i = 0; i < productsArray.length; i++){
+                // console.log(productsArray[i]['customerID']);
+
+                orderList.push(createData(
+                    productsArray[i]['product'],
+                    productsArray[i]['orderID'],
+                    productsArray[i]['date'],
+                    productsArray[i]['quantity']
+                ));
+            }
+            setOrders(orderList);
         
         }catch(err){
             console.error(err.message);
@@ -91,6 +88,27 @@ export default function Orders() {
 
     useEffect(()=>{
         getOrder()},[])
+
+    const deleteOrder = async (order) => {
+        try{
+            const res = await axios.post(
+                'http://localhost:5000/api/delete_order', 
+                user, order
+                );
+            console.log(res.data)
+        
+        }catch(err){
+            console.error(err.message);
+        }
+    };
+
+    function RaisedButton(props) {
+        return (
+            <Button color="secondary" onClick={props.click}>
+                Delete
+            </Button>
+        );
+    }
 
     return (
         <>
@@ -114,6 +132,10 @@ export default function Orders() {
                             </TableCell>
 
                             <TableCell className={classes.thCell}>
+                                Order ID
+                                </TableCell>
+
+                            <TableCell className={classes.thCell}>
                                 Date Bought
                                 </TableCell>
 
@@ -121,12 +143,8 @@ export default function Orders() {
                                 Quantity Bought
                                 </TableCell>
 
-                            <TableCell className={classes.thCell}>
-                                Restock Date
-                                </TableCell>
-
                             <TableCell align="right" className={classes.thCell}>
-                                Edit Order
+                                Delete Order
                                 </TableCell>
 
                         </TableRow>
@@ -134,12 +152,17 @@ export default function Orders() {
 
 
                         <TableBody>
-                        {rows.map((row) => (
+                        {orders.map((row) => (
 
-                            <TableRow key={row.name}>
+                            <TableRow key={row.product}>
+                                
 
                                 <TableCell component="th" scope="row">
-                                    {row.name}
+                                    {row.product}
+                                </TableCell>
+
+                                <TableCell>
+                                    {row.orderID}
                                 </TableCell>
 
                                 <TableCell>
@@ -150,11 +173,9 @@ export default function Orders() {
                                     {row.quantity}
                                 </TableCell>
 
-                                <TableCell>
-                                    {row.restock}
-                                </TableCell>
-
                                 <TableCell align="right">
+
+                                    <RaisedButton click={() => deleteOrder(row.orderID)} />
 
                                 </TableCell>
 

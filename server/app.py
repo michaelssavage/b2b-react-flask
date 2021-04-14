@@ -112,7 +112,7 @@ def delete_order():
         # parse and return order file
         data = request.get_json()
         customer_id = data['customer_id']
-        order_ID = data['orderID']
+        order_ID = data.orderID
 
         return jsonify(Order.deleteUserOrder(customer_id, order_ID))
 
