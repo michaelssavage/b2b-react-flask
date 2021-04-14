@@ -4,8 +4,8 @@ import random
 import pandas as pd
 import datetime
 
-orders_file = "orders.csv"
-products_file = "../products/products.csv"
+orders_file = "./orders/orders.csv"
+products_file = "./products/products.csv"
 
 class Order:
     def __init__(self, customer_id, product, date, quantity):
@@ -47,11 +47,12 @@ def getUserOrders(customer_id):
 
 
 def placeOrder(order):
-    df_products = pd.read_csv(products_file)
     # order details
     product = order.product
     quantity = order.quantity
     # stock details
+    df_products = pd.read_csv(products_file)
+
     product_row_num = df_products[df_products['productName'] == product].index[0]
     stock_level = df_products.loc[product_row_num]['stock_quantity']
 

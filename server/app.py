@@ -11,6 +11,7 @@ import users
 from orders import Order
 import products
 import datetime
+import pandas as pd
 
 users = {
     "john": generate_password_hash("hello"),
@@ -149,18 +150,19 @@ def not_implemented(e):
 
 
 def add_new_customer(customer_id, password):
-    # TODO check if user already exists
-    # if customer_id not in csv_file:
-    with open('./users/users.csv', 'a+', newline='') as users_file:
-        data = csv.DictReader(users_file)
-        for row in data:
-            if row['userID'] == customer_id:
-                return "User already exists"
+    df_users = pd.read_csv('./users/users.csv')
+    # get the id column
+    df_users = df_users.loc[df_users['userID'] == customer_id]
 
-            else:
-                csv_writer = csv.writer(users_file)
-                csv_writer.writerow([customer_id, password])
-                return "Users successfully added"
+    # if no matches found
+    if df_users.empty:
+        with open("./users/users.csv", "a", newline="") as users_csv:
+            orders_writer = csv.writer(users_csv, delimiter=',')
+            orders_writer.writerow([customer_id, password])
+        return "User successfully added"
+    # otherwise username already present
+    else:
+        return "User already exists"
 
 
 if __name__ == '__main__':
