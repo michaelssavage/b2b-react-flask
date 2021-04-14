@@ -53,7 +53,7 @@ export default function Orders() {
     const [orders, setOrders] = useState([]);
 
     const user = { 
-        customerID: "user4"
+        customerID: "gerard"
     };
     
     const getOrder = async () => {
@@ -87,11 +87,11 @@ export default function Orders() {
     };
 
     useEffect(()=>{
-        getOrder()},[])
+        getOrder()},[]);
 
     const deleteOrder = async (order) => {
         try{
-            const res = await axios.post(
+            await axios.post(
                 'http://localhost:5000/api/delete_order', 
                 {
                     customerID: user.customerID, 

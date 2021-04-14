@@ -80,10 +80,10 @@ def place_order():
         data = request.get_json()
 
         customerID = data['customerID']
-        product = data['product_name']
-        quantity = data['quantity']
-        day = data['day']
-        month = data['month']
+        product = data['product_name'].lower()
+        quantity = int(data['quantity'])
+        day = int(data['day'])
+        month = int(data['month'])
 
         order_date = datetime.datetime(datetime.datetime.now().year, month, day)
         
