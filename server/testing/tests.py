@@ -11,7 +11,7 @@ def test_place_order():
     r = requests.post(
         'http://127.0.0.1:5000/api/order', 
         json={
-            "customer_id" : "user4", 
+            "customerID" : "user4", 
             "product_name": "oranges", 
             "quantity" : 2, 
             "day": 14, 
@@ -24,7 +24,7 @@ def test_place_order():
 def get_orders():
     r = requests.post(
         'http://127.0.0.1:5000/api/check_orders', 
-        json={"customer_id" : "user4"}
+        json={"customerID" : "user4"}
         )
     print(r.content)
     print(r.status_code)
@@ -33,7 +33,7 @@ def add_new_user():
     r = requests.post(
         'http://127.0.0.1:5000/api/add_customer', 
         json={
-            "customer_id" : "henry", 
+            "customerID" : "henry", 
             "password": "theHoover"}
         )
     print(r.content)
@@ -42,7 +42,7 @@ def delete_order():
     r = requests.post(
         'http://127.0.0.1:5000/api/delete_order', 
         json={
-            "customer_id" : "user43", 
+            "customerID" : "user43", 
             "orderID": 23
             }
         )

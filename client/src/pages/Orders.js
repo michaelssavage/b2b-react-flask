@@ -53,7 +53,7 @@ export default function Orders() {
     const [orders, setOrders] = useState([]);
 
     const user = { 
-        customer_id: "user4"
+        customerID: "user4"
     };
     
     const getOrder = async () => {
@@ -93,9 +93,15 @@ export default function Orders() {
         try{
             const res = await axios.post(
                 'http://localhost:5000/api/delete_order', 
-                user, order
-                );
-            console.log(res.data)
+                {
+                    customerID: user.customerID, 
+                    orderID: order
+                }
+            );
+            console.log({
+                customerID: user.customerID, 
+                orderID: order
+            })
         
         }catch(err){
             console.error(err.message);

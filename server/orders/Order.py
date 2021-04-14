@@ -8,15 +8,15 @@ orders_file = "./orders/orders.csv"
 products_file = "./products/products.csv"
 
 class Order:
-    def __init__(self, customer_id, product, date, quantity):
-        self.customer_id = customer_id
+    def __init__(self, customerID, product, date, quantity):
+        self.customerID = customerID
         self.order_id = self.getOrderID()
         self.product = product
         self.date = date
         self.quantity = quantity
 
     def prettyPrint(self):
-        return("Customer {}, has ordered {} {} on {}".format(self.customer_id, self.quantity, self.product, self.date))
+        return("Customer {}, has ordered {} {} on {}".format(self.customerID, self.quantity, self.product, self.date))
 
     def toJSON(self):
         order = {
@@ -27,7 +27,7 @@ class Order:
         return order
 
     def toCSV(self):
-        order = [self.customer_id, self.order_id, self.product, self.quantity, self.date]
+        order = [self.customerID, self.order_id, self.product, self.quantity, self.date]
         return order
 
     # TODO better way of picking order numbers
@@ -36,10 +36,10 @@ class Order:
         num = random.randint(1,100)
         return num
 
-def getUserOrders(customer_id):
+def getUserOrders(customerID):
     df = pd.read_csv(orders_file)
     try:
-        df = df.loc[df['customerID'] == customer_id]
+        df = df.loc[df['customerID'] == customerID]
         # specify the way to print
         return df.to_json(orient='records')
     except Exception:
@@ -72,13 +72,13 @@ def placeOrder(order):
         return "Sorry, not enough stock to fulfill your order!"
 
 
-def deleteUserOrder(customer_ID, order_ID):
+def deleteUserOrder(customerID, order_ID):
     df_orders = pd.read_csv(orders_file)
     df_products = pd.read_csv(products_file)
 
     try:
     # locate the customers order and details
-        order = df_orders.loc[(df_orders['customerID'] == customer_ID) & (df_orders['orderID'] == order_ID)]
+        order = df_orders.loc[(df_orders['customerID'] == customerID) & (df_orders['orderID'] == order_ID)]
         product = order['product'].item()
         quantity = order['quantity'].item()
 

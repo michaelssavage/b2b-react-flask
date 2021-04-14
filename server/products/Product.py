@@ -6,12 +6,15 @@ class Product:
         self.restock_quantity = restock_quantity
 
     def getproductDetails(self):
+        # empty
         pass 
 
 
 def updateProductStock():
     # open stock file and reduce by number specified in order
+    pass
 
 def getFutureAvailability(product):
     # open orders and sum all orders for a specific file
-    # then minus this 
+    # then minus this
+    pass

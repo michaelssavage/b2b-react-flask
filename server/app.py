@@ -76,7 +76,7 @@ def place_order():
         # parse order details
         data = request.get_json()
 
-        customer_id = data['customer_id']
+        customerID = data['customerID']
         product = data['product_name']
         quantity = data['quantity']
         day = data['day']
@@ -84,7 +84,7 @@ def place_order():
 
         order_date = datetime.datetime(datetime.datetime.now().year, month, day)
         
-        cust_order = Order.Order(customer_id, product, order_date.strftime("%d/%m/%Y"), quantity)
+        cust_order = Order.Order(customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
         
         result = Order.placeOrder(cust_order)
         return jsonify(result)
@@ -98,9 +98,9 @@ def check_orders():
     if (request.method == 'POST'):
         # parse and return order file
         data = request.get_json()
-        customer_id = data['customer_id']
+        customerID = data['customerID']
 
-        return Order.getUserOrders(customer_id)
+        return Order.getUserOrders(customerID)
 
     else:
         return jsonify("Error, POST requests only please")
@@ -111,19 +111,20 @@ def delete_order():
     if (request.method == 'POST'):
         # parse and return order file
         data = request.get_json()
-        customer_id = data['customer_id']
-        order_ID = data.orderID
+        customerID = data['customerID']
+        order_ID = data['orderID']
+        print(customerID, order_ID)
 
-        return jsonify(Order.deleteUserOrder(customer_id, order_ID))
+        return jsonify(Order.deleteUserOrder(customerID, order_ID))
 
 
 @app.route("/api/add_customer", methods=["POST"])
 def add_user():
     if (request.method == 'POST'):        
         data = request.get_json()
-        customer_id = data['customer_id']
+        customerID = data['customerID']
         password = data['password']
-        result = add_new_customer(customer_id, password)
+        result = add_new_customer(customerID, password)
 
         return jsonify(result)
 
@@ -148,16 +149,16 @@ def not_implemented(e):
     return jsonify("ERROR: This URL does not accept the HTTP request sent")
 
 
-def add_new_customer(customer_id, password):
+def add_new_customer(customerID, password):
     df_users = pd.read_csv('./users/users.csv')
     # get the id column
-    df_users = df_users.loc[df_users['userID'] == customer_id]
+    df_users = df_users.loc[df_users['userID'] == customerID]
 
     # if no matches found
     if df_users.empty:
         with open("./users/users.csv", "a", newline="") as users_csv:
             orders_writer = csv.writer(users_csv, delimiter=',')
-            orders_writer.writerow([customer_id, password])
+            orders_writer.writerow([customerID, password])
         return "User successfully added"
     # otherwise username already present
     else:
