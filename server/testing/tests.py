@@ -43,7 +43,7 @@ def delete_order():
         'http://127.0.0.1:5000/api/delete_order', 
         json={
             "customerID" : "user4", 
-            "orderID": 7
+            "orderID": 44
             }
         )
     print(r.content)
