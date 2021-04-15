@@ -11,6 +11,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from "axios";
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -36,7 +43,6 @@ export default function Login() {
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-
     function handleSubmit(event){
         event.preventDefault()
         console.log( 'name:', name, 'Password: ', password); 
@@ -56,6 +62,22 @@ export default function Login() {
             console.log(error);
         });
     }
+
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [alertStyle, setAlertStyle] = useState("success");
+    const handleMessage = (text, alert) => {
+        setAlertStyle(alert);
+        setMessage(text);
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -128,6 +150,13 @@ export default function Login() {
 
                 </form>
             </div>
+
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+
+                <Alert onClose={handleClose} severity={alertStyle}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </Container>
     )
 }

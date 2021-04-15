@@ -1,5 +1,4 @@
 import React, { useState, useEffect} from 'react';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,31 +34,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const products = [
-    {
-        value: 'p1',
-        label: 'Game Boy',
-    },
-    {
-        value: 'p2',
-        label: 'Apples',
-    },
-    {
-        value: 'p3',
-        label: 'Oranges',
-    },
-    {
-        value: 'p4',
-        label: 'Jolt cola',
-    },
-];
-
-var dict = {
-    "p1": "Game Boy",
-    "p2": "Apples",
-    "p3": "Oranges",
-    "p4": "Jolt cola"
-}
+const products = [];        // value: pN, label: game boy etc.
+var productDict = {};       // dict[value] = label
 
 export default function Home() {
     const classes = useStyles();
@@ -75,9 +51,18 @@ export default function Home() {
 
             let productsArr = [];
             for(let i = 0; i < productsArray.length; i++){
+
+                let value = "p" + (i+1);
+                let label = productsArray[i].productName;
+
                 productsArr.push(productsArray[i]);
+                products.push({
+                    value: value,
+                    label: label
+                })
+                productDict[value] = label;
             }
-            // console.log(productsArr)
+            // console.log(products)
             setProduct(productsArr);
 
         }catch(err){
@@ -122,7 +107,7 @@ export default function Home() {
             const res = await axios.post('http://localhost:5000/api/order',
                 {
                     customerID: "gerard",
-                    product_name: dict[productOrder],
+                    product_name: productDict[productOrder],
                     quantity: quantity,
                     day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
                     month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
