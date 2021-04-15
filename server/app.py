@@ -14,7 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Custom packages
 from orders import Order
 from users import User
-import products
+from products import Product
 from users import Users
 import datetime
 import pandas as pd
@@ -58,10 +58,9 @@ def protected():
 def home():
     # read products file
     if (request.method == 'GET'):
-        with open('./products/products.json', "r") as json_file:
-            data = json.load(json_file)
-    
-    return jsonify(data)
+        return Product.getproducts()
+    else:
+        return make_response()
 
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).

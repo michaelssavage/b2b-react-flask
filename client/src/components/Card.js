@@ -51,7 +51,7 @@ export default function ProductCard({ product }) {
         try{
             const res = axios.post(http://localhost:5000/availability_future, 
                 {
-                    product: product.name,
+                    product: product.productName,
                     date: date
                 }
             );
@@ -71,10 +71,10 @@ export default function ProductCard({ product }) {
         <>
             <Card className='pt-3 my-3 rounded text-center shadow-lg bg-white rounded' style={{ border: 'none' }}>
 
-                <Card.Body className={`${product.name} rounded text-black`}>
+                <Card.Body className={`${product.productName} rounded text-black`}>
 
                         <Card.Title className="font-weight-bold" component="h1">
-                            {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+                            {product.productName.charAt(0).toUpperCase() + product.productName.slice(1)}
                         </Card.Title>
 
                         <ListGroup variant="flush">
@@ -113,7 +113,7 @@ export default function ProductCard({ product }) {
                             </FormControl>
 
                             <Typography className={classes.projection}>
-                                Projections for {product.name}: 
+                                Projections for {product.productName}: 
                                                                     {/* {projection} */}
                             </Typography>
                         </AccordionDetails>

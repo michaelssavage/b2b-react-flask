@@ -1,3 +1,5 @@
+import pandas as pd
+
 class Product:
     def __init__(self, name, quantity, restock_date, restock_quantity):
         self.name = name
@@ -5,9 +7,10 @@ class Product:
         self.restock_date = restock_date
         self.restock_quantity = restock_quantity
 
-    def getproductDetails(self):
-        # empty
-        pass 
+def getproducts():
+    # read file and return as json
+    df_products = pd.read_csv("./products/products.csv")
+    return df_products.to_json(orient='records')
 
 
 def updateProductStock():

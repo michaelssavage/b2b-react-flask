@@ -69,9 +69,9 @@ export default function Home() {
 
         try{
             const res = await axios.get('http://localhost:5000/api/products');
-            // console.log(res.data.products)
+            // console.log(res.data)
 
-            const productsArray = res.data.products;
+            const productsArray = res.data;
 
             let productsArr = [];
             for(let i = 0; i < productsArray.length; i++){
