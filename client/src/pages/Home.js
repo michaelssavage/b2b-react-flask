@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const products = [];        // value: pN, label: game boy etc.
-var productDict = {};       // dict[value] = label
+var productDropdown = {};       // dict[value] = label
 
 export default function Home() {
     const classes = useStyles();
@@ -52,17 +52,19 @@ export default function Home() {
             let productsArr = [];
             for(let i = 0; i < productsArray.length; i++){
 
-                let value = "p" + (i+1);
+                let value = "p" + (i+1).toString();
                 let label = productsArray[i].productName;
+
+                // console.log(value, label
+                //     );
 
                 productsArr.push(productsArray[i]);
                 products.push({
                     value: value,
                     label: label
                 })
-                productDict[value] = label;
+                productDropdown[value] = label;
             }
-            // console.log(products)
             setProduct(productsArr);
 
         }catch(err){
@@ -80,9 +82,14 @@ export default function Home() {
         setQuantity(event.target.value);
     };
 
-    const [selectedDate, setSelectedDate] = useState(new Date('2021-05-13T21:11:54'));
+    let today = moment();
+    const [selectedDate, setSelectedDate] = useState(today._d);
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        if(moment(date).isAfter(today)){
+            setSelectedDate(date);
+        } else {
+            setSelectedDate(today);
+        }
     };
 
     const [open, setOpen] = useState(false);
@@ -107,12 +114,13 @@ export default function Home() {
             const res = await axios.post('http://localhost:5000/api/order',
                 {
                     customerID: "gerard",
-                    product_name: productDict[productOrder],
+                    product_name: productDropdown[productOrder] + "",
                     quantity: quantity,
                     day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
                     month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
                 }
             );
+            console.log(res);
 
             if (res.data === "success"){
                 handleMessage("Order Successful, sufficient stock!", "success");
@@ -158,6 +166,7 @@ export default function Home() {
                             variant="inline"
                             format="dd/MM/yyyy"
                             margin="normal"
+                            disablePast
                             label="Choose The Order"
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
