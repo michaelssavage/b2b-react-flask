@@ -1,5 +1,7 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
+import flask_login
+
 import json
 import csv
 import threading
@@ -11,30 +13,45 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Custom packages
 from orders import Order
+from users import User
 import products
 from users import Users
 import datetime
 import pandas as pd
 
-users = {
-    "john": generate_password_hash("hello"),
-    "susan": generate_password_hash("bye")
-}
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
+app.secret_key = 'super secret string'  # Change this!
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+# auth = HTTPBasicAuth()
 cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and check_password_hash(users.get(username), password):
-        return username
+users = {'foo@bar.tld': {'password': 'secret'}}
 
-@app.route('/')
-@auth.login_required
-def index():
-    return jsonify("Hello, {}!".format(auth.current_user()))
+@app.route('/api/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json()
+        customerID = data['name']
+        password = data['password']
+
+        if password == users[customerID]['password']:
+            user = User.User()
+            user.id = customerID
+            flask_login.login_user(user)
+            # success
+            return make_response(jsonify("Success"), 201)
+
+    # unauthorised
+    return make_response(jsonify('Bad login'), 401)
+
+
+@app.route('/api/protected', methods=["GET"])
+@flask_login.login_required
+def protected():
+    return jsonify('Logged in as: ' + flask_login.current_user.id)
 
 
 @app.route("/api/products", methods=["GET"])
@@ -45,15 +62,6 @@ def home():
             data = json.load(json_file)
     
     return jsonify(data)
-
-
-# Login as a specific customer ID
-@app.route("/api/login", methods=["POST"])
-def login():
-    if (request.method == 'POST'):
-        data = request.get_json()
-
-    return jsonify("Howdy ", data)
 
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
