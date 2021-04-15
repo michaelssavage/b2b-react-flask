@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,20 +40,22 @@ const useStyles = makeStyles((theme) => ({
 export default function ProductCard({ product }) {
 
     const classes = useStyles();
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState("1 Month");
 
     const handleChange = (event) => {
         setDate(event.target.value);
+        getProjection();
     };
 
-    {/*
+    console.log(date[0]);
+
     const [projection, setProjection] = useState([]);
-    const getProduct = async () => {
+    const getProjection = async () => {
         try{
-            const res = axios.post(http://localhost:5000/availability_future, 
+            const res = axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
-                    date: date
+                    date: date[0]
                 }
             );
 
@@ -61,11 +64,6 @@ export default function ProductCard({ product }) {
             console.error(err.message);
         }
     };
-
-    useEffect(() => {
-        getProjection();
-    }, [])
-    */}
 
     return (
         <>
@@ -98,7 +96,7 @@ export default function ProductCard({ product }) {
                         </AccordionSummary>
                         <AccordionDetails>
 
-                            <FormControl variant="outlined" className={classes.formControl}>
+                            <FormControl variant="filled" className={classes.formControl}>
 
                                 <InputLabel>
                                     Date
@@ -106,9 +104,9 @@ export default function ProductCard({ product }) {
 
                                 <Select value={date} onChange={handleChange}
                                 >
-                                    <MenuItem value={10}>1 Month</MenuItem>
-                                    <MenuItem value={20}>3 Months</MenuItem>
-                                    <MenuItem value={30}>6 Months</MenuItem>
+                                    <MenuItem value={1}>1 Month</MenuItem>
+                                    <MenuItem value={3}>3 Months</MenuItem>
+                                    <MenuItem value={6}>6 Months</MenuItem>
                                 </Select>
                             </FormControl>
 
