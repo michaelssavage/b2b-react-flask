@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -27,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
     const classes = useStyles();
 
+    const history = useHistory();
+    async function handleSignOut(){
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        try {
+            history.push("/login");
+        } catch (e){
+            alert(e.message);
+        }
+    }
+
     return (
         <div className={classes.root}>
         <AppBar position="static">
@@ -45,7 +56,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link href="login" color="inherit">
-                    <Button color="inherit">
+                    <Button color="inherit" onClick={handleSignOut}>
                         Sign out
                     </Button>
                 </Link>

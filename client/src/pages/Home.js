@@ -75,7 +75,7 @@ export default function Home() {
         }
     };
 
-    const [productOrder, setProductOrder] = useState('p1');
+    const [productOrder, setProductOrder] = useState('');
     const handleChange = (event) => {
         setProductOrder(event.target.value);
     };
