@@ -14,31 +14,23 @@ lock = threading.Lock()
 class Order:
     def __init__(self, customerID, product, date, quantity):
         self.customerID = customerID
-        self.order_id = self.getOrderID()
+        self.orderID = self.getOrderID(customerID)
         self.product = product
         self.date = date
         self.quantity = quantity
 
-    def prettyPrint(self):
-        return("Customer {}, has ordered {} {} on {}".format(self.customerID, self.quantity, self.product, self.date))
-
-    def toJSON(self):
-        order = {
-            "date": self.date,
-            "product": self.product,  
-            "quantity": self.quantity
-        }
-        return order
-
     def toCSV(self):
-        order = [self.customerID, self.order_id, self.product, self.quantity, self.date]
+        order = [self.customerID, self.orderID, self.product, self.quantity, self.date]
         return order
 
     # TODO better way of picking order numbers
     # maybe use row count of orders related to cutomer id
-    def getOrderID(self):
-        num = random.randint(1,100)
-        return num
+    def getOrderID(self, customerID):
+        df_orders = pd.read_csv(orders_file)
+        df_orders.loc[df_orders['customerID'] == customerID]
+        numOrders = len(df_orders.index)
+        orderNum = int(numOrders) + 1
+        return orderNum
 
 
 def deleteUserOrder(customerID, order_ID):
@@ -48,7 +40,7 @@ def deleteUserOrder(customerID, order_ID):
     df_products = pd.read_csv(products_file)
 
     try:
-    # locate the customers order and details
+        # locate the customers order and details
         order = df_orders.loc[(df_orders['customerID'] == customerID) & (df_orders['orderID'] == order_ID)]
         product = order['product'].item()
         quantity = order['quantity'].item()
@@ -107,8 +99,7 @@ def placeOrder(order):
         # update stock
         new_stock_level = stock_level - quantity
         df_products.at[product_row_num, 'stock_quantity'] = new_stock_level
-
-
+        # update value on file
         df_products.to_csv(products_file, index = False, sep=',')
         # release the lock
         lock.release()
