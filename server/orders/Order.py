@@ -87,6 +87,8 @@ def placeOrder(order):
     # order details
     product = order.product
     quantity = order.quantity
+
+    print(product, quantity)
     # acquire lock
     lock.acquire()
     # stock details
