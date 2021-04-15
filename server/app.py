@@ -93,7 +93,7 @@ def place_order():
         data = request.get_json()
 
         customerID = data['customerID']
-        product = data['product_name'].lower()
+        product = data['product_name']
         quantity = int(data['quantity'])
         day = int(data['day'])
         month = int(data['month'])
