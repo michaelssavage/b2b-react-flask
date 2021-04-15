@@ -88,11 +88,7 @@ export default function Home() {
     let today = moment();
     const [selectedDate, setSelectedDate] = useState(today._d);
     const handleDateChange = (date) => {
-        if(moment(date).isAfter(today)){
-            setSelectedDate(date);
-        } else {
-            setSelectedDate(today);
-        }
+        setSelectedDate(date);
     };
 
     const [open, setOpen] = useState(false);
