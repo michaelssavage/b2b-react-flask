@@ -2,7 +2,7 @@ import threading
 import pandas as pd
 import csv
 
-orders_file = "./orders/orders.csv"
+users_file = './users/users.csv'
 lock = threading.Lock()
 
 class Users:
@@ -13,7 +13,7 @@ class Users:
 
 def add_new_customer(customerID, password):
     lock.acquire()
-    df_users = pd.read_csv('./users/users.csv')
+    df_users = pd.read_csv(users_file)
     # get the id column
     df_users = df_users.loc[df_users['userID'] == customerID]
 

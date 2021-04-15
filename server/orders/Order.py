@@ -23,13 +23,12 @@ class Order:
         order = [self.customerID, self.orderID, self.product, self.quantity, self.date]
         return order
 
-    # TODO better way of picking order numbers
-    # maybe use row count of orders related to cutomer id
     def getOrderID(self, customerID):
         df_orders = pd.read_csv(orders_file)
         df_orders.loc[df_orders['customerID'] == customerID]
         numOrders = len(df_orders.index)
-        orderNum = int(numOrders) + 1
+        # random method of allocating order number
+        orderNum = int(numOrders) + random.randint(numOrders + 10, 1000)
         return orderNum
 
 
@@ -58,7 +57,6 @@ def deleteUserOrder(customerID, order_ID):
         # rewrite back to file
         df_orders.to_csv(orders_file, index = False, sep=',')
         lock.release()
-        # TODO: add locks here
         return "success" # Success, order successfully deleted
     except Exception:
         lock.release()
@@ -107,14 +105,3 @@ def placeOrder(order):
     else:
         lock.release()
         return "failed"
-
-# for testing
-def localPlaceOrder():
-    order_date = datetime.datetime(datetime.datetime.now().year, 3, 1)
-    print(placeOrder(Order("user43", "jolt cola", order_date.strftime("%d/%m/%Y"), 200)))
-
-
-if __name__ == '__main__':
-    # print(getUserOrders("user4"))
-    print(deleteUserOrder("user43", 97))
-    # localPlaceOrder()

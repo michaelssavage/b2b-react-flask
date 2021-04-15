@@ -3,7 +3,7 @@ import csv
 class LoginHandler:
 
     def __init__(self):
-        self.file = "login.csv"
+        self.file = "users.csv"
 
     def signUp(self, name, password):
         fieldnames = ['name', 'password']
@@ -24,7 +24,7 @@ class LoginHandler:
             reader = csv.DictReader(csvfile)
 
             for row in reader:
-                if row['name'] == name:
+                if row['userID'] == name:
                     exists = True
                     return exists
             return exists
@@ -35,7 +35,7 @@ class LoginHandler:
             reader = csv.DictReader(csvfile)
 
             for row in reader:
-                if row['name'] == name and row['password'] == password:
+                if row['userID'] == name and row['password'] == password:
                     valid = True
                 
             if valid:
