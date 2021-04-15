@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(2),
             width: '25ch',
-            },
+        },
     }
 }));
 
@@ -112,8 +112,6 @@ export default function Home() {
     };
 
     const PlaceNewOrder = async () => {
-
-
         if(quantity === ""){
             handleMessage("Make Sure You Enter A Quantity", "info");
         } else {

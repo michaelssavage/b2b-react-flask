@@ -140,13 +140,12 @@ export default function Orders() {
         <>
             <Navbar />
 
-            <Container component="main" maxWidth="xs" className="mt-5">  
-                <Typography align="center" variant="h3"> 
+            <Container component="main" maxWidth="md" className="mt-5"> 
+
+                <Typography align="center" variant="h5" className="mb-2"> 
                     My Orders
                 </Typography>
-            </Container>
 
-            <Container component="main" maxWidth="md" className="mt-5">  
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
 

@@ -23,6 +23,13 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 2
     },
+
+    button: {
+        '&:hover': {
+            color: '#e91e63',
+        },
+        textDecoration: 'none' 
+    }
 }));
 
 export default function Navbar() {
@@ -44,18 +51,22 @@ export default function Navbar() {
             <Toolbar>
 
                 <Typography variant="h6" className={classes.home}>
-                    <Link href="home" color="inherit">
-                    Home
+                    <Link href="home" color="inherit" className={classes.button}>
+
+                        <Button color="inherit">
+                        Home
+                        </Button>
+                        
                     </Link>
-                </Typography> 
+                </Typography>
                 
-                <Link href="orders" color="inherit">
+                <Link href="orders" color="inherit" className={classes.button}>
                     <Button color="inherit">
                         My Orders
                     </Button>
                 </Link>
 
-                <Link href="login" color="inherit">
+                <Link href="login" color="inherit" className={classes.button}>
                     <Button color="inherit" onClick={handleSignOut}>
                         Sign out
                     </Button>
