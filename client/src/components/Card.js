@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Card } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 
@@ -40,22 +40,23 @@ const useStyles = makeStyles((theme) => ({
 export default function ProductCard({ product }) {
 
     const classes = useStyles();
-    const [date, setDate] = useState("1 Month");
+    const [date, setDate] = useState("");
 
     const handleChange = (event) => {
         setDate(event.target.value);
-        getProjection();
+        // console.log(event.target.value);
+        getProjection(event.target.value);
     };
 
-    console.log(date[0]);
-
     const [projection, setProjection] = useState([]);
-    const getProjection = async () => {
+    const getProjection = async (currentDate) => {
         try{
+
+            // console.log(currentDate);
             const res = axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
-                    date: date[0]
+                    date: currentDate
                 }
             );
 
@@ -96,17 +97,19 @@ export default function ProductCard({ product }) {
                         </AccordionSummary>
                         <AccordionDetails>
 
-                            <FormControl variant="filled" className={classes.formControl}>
+                            <FormControl variant="outlined" className={classes.formControl}>
 
-                                <InputLabel>
-                                    Date
-                                </InputLabel>
-
-                                <Select value={date} onChange={handleChange}
+                                <InputLabel id="demo-simple-select-outlined-label">Date</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={date}
+                                    onChange={handleChange}
+                                    label="Date"
                                 >
-                                    <MenuItem value={1}>1 Month</MenuItem>
-                                    <MenuItem value={3}>3 Months</MenuItem>
-                                    <MenuItem value={6}>6 Months</MenuItem>
+                                    <MenuItem value="1">1 Month</MenuItem>
+                                    <MenuItem value="3">3 Months</MenuItem>
+                                    <MenuItem value="6">6 Months</MenuItem>
                                 </Select>
                             </FormControl>
 
