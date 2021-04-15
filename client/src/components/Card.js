@@ -59,6 +59,10 @@ export default function ProductCard({ product }) {
                     date: currentDate
                 }
             );
+            console.log({
+                product: product.productName,
+                date: date
+            });
 
             console.log({
                     product: product.productName,
@@ -104,7 +108,7 @@ export default function ProductCard({ product }) {
                         </AccordionSummary>
                         <AccordionDetails>
 
-                            <FormControl variant="outlined" className={classes.formControl}>
+                            <FormControl variant="filled" className={classes.formControl}>
 
                                 <InputLabel id="demo-simple-select-outlined-label">Date</InputLabel>
                                 <Select

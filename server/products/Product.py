@@ -12,15 +12,12 @@ class Product:
         self.restock_date = restock_date
         self.restock_quantity = restock_quantity
 
+
 def getproducts():
     # read file and return as json
     df_products = pd.read_csv("./products/products.csv")
     return df_products.to_json(orient='records')
 
-
-def updateProductStock():
-    # open stock file and reduce by number specified in order
-    pass
 
 def getFutureAvailability(product, time):
     try:
@@ -52,10 +49,5 @@ def getFutureAvailability(product, time):
 
         projectedAvailability = (stock_level + restockingForThisPeriod) - totalProductOrders
         return int(projectedAvailability)
-
     except Exception as e:
         return e
-
-
-if __name__ == '__main__':
-    print(getFutureAvailability("oranges", 1))

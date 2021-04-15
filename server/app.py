@@ -1,24 +1,19 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
-import flask_login
 
 import json
 import csv
 import threading
+import datetime
+import pandas as pd
 
 lock = threading.Lock()
-
-from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import generate_password_hash, check_password_hash
 
 # Custom packages
 from orders import Order
 from users import User, loginHandler
 from products import Product
 from users import Users
-import datetime
-import pandas as pd
-
 
 app = Flask(__name__)
 app.secret_key = 'super secret string'  # Change this!
@@ -68,15 +63,15 @@ def check_availability_future():
         product = data['product']
         timePeriod = data['date']
         result = Product.getFutureAvailability(
-                        product, 
-                        int(timePeriod)
-                    )
+                    product, 
+                    int(timePeriod)
+                )
         return jsonify(result)
 
 
 # Check the available quantity of a product given a specified day and time.
 @app.route("/api/availability_check", methods=["GET"])
-def check_availability():
+def check_availability():                                                           # TODO
     if (request.method == 'GET'):
         # need to parse quantity and product from json body
         return jsonify("Some weather hi")
@@ -102,22 +97,14 @@ def place_order():
         result = Order.placeOrder(cust_order)
         return jsonify(result)
 
-    else:
-        return jsonify("Error, POST requests only please")
 
-
-# https://datatofish.com/export-pandas-dataframe-json/
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
     if (request.method == 'POST'):
         # parse and return order file
         data = request.get_json()
         customerID = data['customerID']
-
         return Order.getUserOrders(customerID)
-
-    else:
-        return jsonify("Error, POST requests only please")
     
 
 @app.route("/api/delete_order", methods=["POST"])
@@ -138,9 +125,7 @@ def add_user():
         customerID = data['customerID']
         password = data['password']
         result = Users.add_new_customer(customerID, password)
-
         return jsonify(result)
-
 
 
 #################################################
