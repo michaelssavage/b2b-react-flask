@@ -34,11 +34,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const products = [];        // value: pN, label: game boy etc.
 var productDropdown = {};       // dict[value] = label
 
 export default function Home() {
     const classes = useStyles();
+
+    const [products, setProductCards] = useState([]);  // value: pN, label: game boy etc.
 
     const [product, setProduct] = useState([]);
     const getProduct = async () => {
@@ -50,6 +51,7 @@ export default function Home() {
             const productsArray = res.data;
 
             let productsArr = [];
+            let productCards = [];
             for(let i = 0; i < productsArray.length; i++){
 
                 let value = "p" + (i+1).toString();
@@ -59,13 +61,14 @@ export default function Home() {
                 //     );
 
                 productsArr.push(productsArray[i]);
-                products.push({
+                productCards.push({
                     value: value,
                     label: label
                 })
                 productDropdown[value] = label;
             }
             setProduct(productsArr);
+            setProductCards(productCards);
 
         }catch(err){
             console.error(err.message);
@@ -110,6 +113,14 @@ export default function Home() {
 
     const PlaceNewOrder = async () => {
 
+        console.log({
+            customerID: "gerard",
+            product_name: productDropdown[productOrder] + "",
+            quantity: quantity,
+            day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
+            month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+        });
+
         try{
             const res = await axios.post('http://localhost:5000/api/order',
                 {
@@ -129,7 +140,7 @@ export default function Home() {
             else {
                 handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
             }
-            
+            getProduct();
         }catch(err){
             console.error(err.message);
         }
