@@ -51,9 +51,10 @@ def getFutureAvailability(product, time):
         restockingForThisPeriod = productRestockQuantity * time
 
         projectedAvailability = (stock_level + restockingForThisPeriod) - totalProductOrders
-        return projectedAvailability
-    except:
-        return "Error"
+        return int(projectedAvailability)
+
+    except Exception as e:
+        return e
 
 
 if __name__ == '__main__':

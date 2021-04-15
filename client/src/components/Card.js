@@ -48,19 +48,26 @@ export default function ProductCard({ product }) {
         getProjection(event.target.value);
     };
 
-    const [projection, setProjection] = useState([]);
+    const [projection, setProjection] = useState(0);
     const getProjection = async (currentDate) => {
         try{
 
             // console.log(currentDate);
-            const res = axios.post("http://localhost:5000/api/availability_future", 
+            const res = await axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
                     date: currentDate
                 }
             );
 
-            console.log(res.data);
+            console.log({
+                    product: product.productName,
+                    date: currentDate
+                });
+
+            console.log(res);
+
+            setProjection(res.data);
         }catch(err){
             console.error(err.message);
         }
@@ -114,8 +121,7 @@ export default function ProductCard({ product }) {
                             </FormControl>
 
                             <Typography className={classes.projection}>
-                                Projections for {product.productName}: 
-                                                                    {/* {projection} */}
+                                Projections for {product.productName}: {projection}
                             </Typography>
                         </AccordionDetails>
 
