@@ -18,10 +18,25 @@ from users import Users
 app = Flask(__name__)
 app.secret_key = 'super secret string'  # Change this!
 loginHandler = loginHandler.LoginHandler()
-# auth = HTTPBasicAuth()
-cors = CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+cors = CORS(
+    app, 
+    supports_credentials=True, 
+    resources={
+        r"/api/*": {
+            "origins": "*", 
+            "allow_headers": "*", 
+            "expose_headers": "*"
+            }
+        }
+    )
 
 users = {'forehead': {'password': 'secret'}}
+
+# @app.after_request
+# def middleware_for_response(response):
+#     # Allowing the credentials in the response.
+#     response.headers.add('Access-Control-Allow-Credentials', 'true')
+#     return response
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -32,18 +47,10 @@ def login():
 
         if loginHandler.checkLogin(customerID, password):
             # success
-            response = make_response(jsonify("Success"), 201)
-            response.set_cookie(key='id', value=customerID, max_age=None)
-            return response
+            return make_response(jsonify("Success"), 200)
 
     # unauthorised
     return make_response(jsonify('Bad login'), 401)
-
-
-@app.route('/api/protected', methods=["GET"])
-@flask_login.login_required
-def protected():
-    return jsonify('Logged in as: ' + flask_login.current_user.id)
 
 
 @app.route("/api/products", methods=["GET"])

@@ -61,10 +61,7 @@ export default function Login() {
         // console.log(res.data);
 
         if (res.data === "Success"){
-            console.log(res);
-
-            // fireRedirect ---> home page
-            // store name
+            document.cookie = 'id='+name
         }
 
         }catch(err){
