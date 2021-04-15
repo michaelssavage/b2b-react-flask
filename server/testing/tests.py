@@ -43,8 +43,8 @@ def delete_order():
     r = requests.post(
         base_url + '/delete_order', 
         json={
-            "customerID" : "user4", 
-            "orderID": 44
+            "customerID" : "gerard", 
+            "orderID": 10
             }
         )
     print(r.content)
@@ -61,5 +61,5 @@ if __name__ == '__main__':
     # test_place_order()
     # add_new_user()
     # get_orders()
-    # delete_order()
-    get_products()
+    delete_order()
+    # get_products()

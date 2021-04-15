@@ -67,8 +67,14 @@ def home():
 @app.route("/api/availability_future", methods=["GET"])
 def check_availability_future():
     if (request.method == 'GET'):
-        # some sort of chart may be useful here
-        return jsonify("Plenty of stuff sir")
+        data = request.get_json()
+        product = data['product']
+        timePeriod = data['date']
+        result = Product.getFutureAvailability(
+                        product, 
+                        int(timePeriod)
+                    )
+        return jsonify(result)
 
 
 # Check the available quantity of a product given a specified day and time.

@@ -95,6 +95,7 @@ export default function Home() {
         setQuantity(event.target.value);
     };
 
+    // TODO chnage this todays date
     const [selectedDate, setSelectedDate] = useState(new Date('2021-05-13T21:11:54'));
     const handleDateChange = (date) => {
         setSelectedDate(date);
