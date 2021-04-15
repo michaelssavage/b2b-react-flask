@@ -49,19 +49,28 @@ export default function Login() {
         sendLogin()
     }
 
-    const sendLogin = () => {
-        axios.post('http://localhost:5000/api/login', {
-            withCredentials: true,
-            name: name,
-            password: password
-        })
-        .then((response) => {
-            console.log(response);
+    const sendLogin = async () => {
 
-        }, (error) => {
-            console.log(error);
-        });
-    }
+        try{
+            const res = await axios.post('http://localhost:5000/api/login', {
+                withCredentials: true,
+                name: name,
+                password: password
+            });
+
+        // console.log(res.data);
+
+        if (res.data === "Success"){
+            console.log(res);
+
+            // fireRedirect ---> home page
+            // store name
+        }
+
+        }catch(err){
+            console.error(err.message);
+        }
+    };
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");

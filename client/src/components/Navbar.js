@@ -52,7 +52,7 @@ export default function Navbar() {
 
             </Toolbar>
 
-            <Typography variant="h3" align="center" className="mb-3">
+            <Typography variant="h4" align="center" className="mb-3">
                     Concurr B2B Order System
             </Typography> 
 

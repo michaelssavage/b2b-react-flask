@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Custom packages
 from orders import Order
-from users import User
+from users import User, loginHandler
 from products import Product
 from users import Users
 import datetime
@@ -22,13 +22,11 @@ import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = 'super secret string'  # Change this!
-login_manager = flask_login.LoginManager()
-login_manager.init_app(app)
+loginHandler = loginHandler.LoginHandler()
 # auth = HTTPBasicAuth()
-cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+cors = CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
-
-users = {'foo@bar.tld': {'password': 'secret'}}
+users = {'forehead': {'password': 'secret'}}
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -37,12 +35,11 @@ def login():
         customerID = data['name']
         password = data['password']
 
-        if password == users[customerID]['password']:
-            user = User.User()
-            user.id = customerID
-            flask_login.login_user(user)
+        if loginHandler.checkLogin(customerID, password):
             # success
-            return make_response(jsonify("Success"), 201)
+            response = make_response(jsonify("Success"), 201)
+            response.set_cookie(key='id', value=customerID, max_age=None)
+            return response
 
     # unauthorised
     return make_response(jsonify('Bad login'), 401)

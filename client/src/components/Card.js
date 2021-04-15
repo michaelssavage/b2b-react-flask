@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     projection: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center"
+        justifyContent: "center",
     }
 }));
 
@@ -120,7 +120,7 @@ export default function ProductCard({ product }) {
                                 </Select>
                             </FormControl>
 
-                            <Typography className={classes.projection}>
+                            <Typography className={classes.projection} align="center">
                                 Projections for {product.productName}: {projection}
                             </Typography>
                         </AccordionDetails>

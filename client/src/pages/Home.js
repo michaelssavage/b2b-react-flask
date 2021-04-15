@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(2),
             width: '25ch',
             },
-    },
+    }
 }));
 
 var productDropdown = {};       // dict[value] = label
@@ -114,7 +114,7 @@ export default function Home() {
     const PlaceNewOrder = async () => {
 
         console.log({
-            customerID: "gerard",
+            customerID: "gerard", // storage.cookie??
             product_name: productDropdown[productOrder] + "",
             quantity: quantity,
             day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),

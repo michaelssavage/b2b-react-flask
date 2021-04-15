@@ -94,9 +94,7 @@ export default function Orders() {
     };
 
     useEffect(()=>{
-        
-        getOrder()}
-        ,[]);
+        getOrder()},[]);
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
