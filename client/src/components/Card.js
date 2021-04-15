@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,16 +46,19 @@ export default function ProductCard({ product }) {
         setDate(event.target.value);
     };
 
-    {/*
     const [projection, setProjection] = useState([]);
-    const getProduct = async () => {
+    const getProjection = async () => {
         try{
-            const res = axios.post(http://localhost:5000/availability_future, 
+            const res = axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
                     date: date
                 }
             );
+            console.log({
+                product: product.productName,
+                date: date
+            });
 
             console.log(res.data);
         }catch(err){
@@ -62,10 +66,9 @@ export default function ProductCard({ product }) {
         }
     };
 
-    useEffect(() => {
-        getProjection();
-    }, [])
-    */}
+    // useEffect(() => {
+    //     getProjection();
+    // }, [])
 
     return (
         <>
@@ -98,7 +101,7 @@ export default function ProductCard({ product }) {
                         </AccordionSummary>
                         <AccordionDetails>
 
-                            <FormControl variant="outlined" className={classes.formControl}>
+                            <FormControl variant="filled" className={classes.formControl}>
 
                                 <InputLabel>
                                     Date
@@ -113,8 +116,7 @@ export default function ProductCard({ product }) {
                             </FormControl>
 
                             <Typography className={classes.projection}>
-                                Projections for {product.productName}: 
-                                                                    {/* {projection} */}
+                                Projections for {product.productName}: {projection}
                             </Typography>
                         </AccordionDetails>
 

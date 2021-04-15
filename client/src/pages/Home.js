@@ -113,36 +113,32 @@ export default function Home() {
 
     const PlaceNewOrder = async () => {
 
-        console.log({
-            customerID: "gerard",
-            product_name: productDropdown[productOrder] + "",
-            quantity: quantity,
-            day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-            month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
-        });
-
-        try{
-            const res = await axios.post('http://localhost:5000/api/order',
-                {
-                    customerID: "gerard",
-                    product_name: productDropdown[productOrder] + "",
-                    quantity: quantity,
-                    day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-                    month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+        if(quantity === ""){
+            handleMessage("Make Sure You Enter A Quantity", "info");
+        } else {
+            try{
+                const res = await axios.post('http://localhost:5000/api/order',
+                    {
+                        customerID: "gerard",
+                        product_name: productDropdown[productOrder] + "",
+                        quantity: quantity,
+                        day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
+                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+                    }
+                );
+                console.log(res);
+    
+                if (res.data === "success"){
+                    handleMessage("Order Successful, sufficient stock!", "success");
+                    setQuantity("");
+                } 
+                else {
+                    handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
                 }
-            );
-            console.log(res);
-
-            if (res.data === "success"){
-                handleMessage("Order Successful, sufficient stock!", "success");
-                setQuantity("");
-            } 
-            else {
-                handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
+                getProduct();
+            }catch(err){
+                console.error(err.message);
             }
-            getProduct();
-        }catch(err){
-            console.error(err.message);
         }
     };
 
