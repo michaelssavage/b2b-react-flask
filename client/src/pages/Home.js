@@ -128,18 +128,14 @@ export default function Home() {
                         month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
                     }
                 );
-                console.log(res);
-    
-                if (res.data === "success"){
+                if (res.status === 200){
                     handleMessage("Order Successful, sufficient stock!", "success");
                     setQuantity("");
-                } 
-                else {
-                    handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
                 }
                 getProduct();
             }catch(err){
                 console.error(err.message);
+                handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
             }
         }
     };

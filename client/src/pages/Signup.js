@@ -71,20 +71,15 @@ export default function Signup() {
                 password: password
             });
 
-        // console.log(res.data);
-
-        if (res.data === "Success"){
-            handleMessage("Account Successfully Created", "success");
-            setTimeout(() => {  
-                handleSignUp(); 
-            }, 1000);
-            
-        } else {
-            handleMessage(res.data, "error");
-        }
-
+            if (res.status === 201){
+                handleMessage("Account Successfully Created", "success");
+                setTimeout(() => {  
+                    handleSignUp(); 
+                }, 1000);
+            }
         }catch(err){
             console.error(err.message);
+            handleMessage("This User Already Exists", "error");
         }
     };
 

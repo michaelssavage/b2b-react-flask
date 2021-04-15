@@ -47,10 +47,10 @@ def login():
 
         if loginHandler.checkLogin(customerID, password):
             # success
-            return make_response(jsonify("Success"), 200)
+            return make_response(jsonify("Success"), 201)
 
     # unauthorised
-    return make_response(jsonify("Username Or Password Is Incorrect"))
+    return make_response(jsonify("Username Or Password Is Incorrect"), 401)
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -61,10 +61,10 @@ def signup():
 
         if loginHandler.signUp(customerID, password):
             # success
-            return make_response(jsonify("Success"), 200)
+            return make_response(jsonify("Success"), 201)
 
     # unauthorised
-    return make_response(jsonify("This User Already Exists"))
+    return make_response(jsonify("This User Already Exists"),401)
 
 
 @app.route("/api/products", methods=["GET"])

@@ -70,19 +70,13 @@ export default function Login() {
                 password: password
             });
 
-        // console.log(res.data);
-
-        if (res.data === "Success"){
-            // console.log(res);
-            document.cookie = 'id='+name
-            // return <Redirect to='/home'  /> 
-            handleLogin();
-        } else {
-            handleMessage(res.data, "error");
-        }
-
+            if (res.status === 201){
+                document.cookie = 'id='+name
+                handleLogin();
+            }
         }catch(err){
             console.error(err.message);
+            handleMessage("Username Or Password Is Incorrect", "error");
         }
     };
 

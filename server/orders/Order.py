@@ -4,6 +4,7 @@ import random
 import pandas as pd
 import datetime
 import threading
+from flask import make_response
 
 orders_file = "./orders/orders.csv"
 products_file = "./products/products.csv"
@@ -57,10 +58,10 @@ def deleteUserOrder(customerID, order_ID):
         # rewrite back to file
         df_orders.to_csv(orders_file, index = False, sep=',')
         lock.release()
-        return "success" # Success, order successfully deleted
+        return make_response("Success, order successfully deleted", 200) # Success, order successfully deleted
     except Exception:
         lock.release()
-        return "failed" # Error :(
+        return make_response("Error :(", 409)
 
 
 def getUserOrders(customerID):
@@ -101,7 +102,7 @@ def placeOrder(order):
         df_products.to_csv(products_file, index = False, sep=',')
         # release the lock
         lock.release()
-        return "success"
+        return make_response("success", 200)
     else:
         lock.release()
-        return "failed"
+        return make_response("failed", 401)
