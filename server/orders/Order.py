@@ -67,10 +67,10 @@ def deleteUserOrder(customerID, order_ID):
         df_orders.to_csv(orders_file, index = False, sep=',')
         lock.release()
         # TODO: add locks here
-        return "Success, order successfully deleted"
+        return "success" # Success, order successfully deleted
     except Exception:
         lock.release()
-        return "Error :("
+        return "failed" # Error :(
 
 
 def getUserOrders(customerID):
@@ -110,10 +110,10 @@ def placeOrder(order):
         df_products.to_csv(products_file, index = False, sep=',')
         # release the lock
         lock.release()
-        return "Order Successful, sufficient stock!"
+        return "success"
     else:
         lock.release()
-        return "Sorry, not enough stock to fulfill your order!"
+        return "failed"
 
 # for testing
 def localPlaceOrder():

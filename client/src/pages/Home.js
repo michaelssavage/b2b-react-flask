@@ -7,6 +7,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { Box } from '@material-ui/core'
 import Button from '@material-ui/core/Button';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import { Row, Col } from 'react-bootstrap';
 
 import Card from '../components/Card';
@@ -19,6 +22,10 @@ import { KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -28,31 +35,36 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 const products = [
     {
-        value: 'Game Boy',
+        value: 'p1',
         label: 'Game Boy',
     },
     {
-        value: 'Apples',
+        value: 'p2',
         label: 'Apples',
     },
     {
-        value: 'Oranges',
+        value: 'p3',
         label: 'Oranges',
     },
     {
-        value: 'Jolt cola',
+        value: 'p4',
         label: 'Jolt cola',
     },
 ];
 
-const Home = () => {
+var dict = {
+    "p1": "Game Boy",
+    "p2": "Apples",
+    "p3": "Oranges",
+    "p4": "Jolt cola"
+}
 
+export default function Home() {
     const classes = useStyles();
-    const [product, setProduct] = useState([]);
 
+    const [product, setProduct] = useState([]);
     const getProduct = async () => {
 
         try{
@@ -73,42 +85,58 @@ const Home = () => {
         }
     };
 
-    const [productOrder, setProductOrder] = useState('Game Boy');
-
+    const [productOrder, setProductOrder] = useState('p1');
     const handleChange = (event) => {
         setProductOrder(event.target.value);
     };
     
     const [quantity, setQuantity] = useState("");
-
     const handleQuantity = (event) => {
         setQuantity(event.target.value);
     };
 
     const [selectedDate, setSelectedDate] = useState(new Date('2021-05-13T21:11:54'));
-
     const handleDateChange = (date) => {
         setSelectedDate(date);
+    };
+
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [alertStyle, setAlertStyle] = useState("success");
+    const handleMessage = (text, alert) => {
+        setAlertStyle(alert);
+        setMessage(text);
+        setOpen(true);
+    };
+    
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpen(false);
     };
 
     const PlaceNewOrder = async () => {
 
         try{
-            await axios.post('http://localhost:5000/api/order',
+            const res = await axios.post('http://localhost:5000/api/order',
                 {
                     customerID: "gerard",
-                    product_name: productOrder,
+                    product_name: dict[productOrder],
                     quantity: quantity,
                     day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
                     month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
                 }
             );
-            console.log({
-                product_name: productOrder,
-                quantity: quantity,
-                day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-                month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
-            })
+
+            if (res.data === "success"){
+                handleMessage("Order Successful, sufficient stock!", "success");
+                setQuantity("");
+            } 
+            else {
+                handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
+            }
+            
         }catch(err){
             console.error(err.message);
         }
@@ -121,13 +149,8 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <Container component="main" maxWidth="xs" className="mt-5">  
-                <Typography align="center" variant="h3"> 
-                    Concurr B2B Order System
-                </Typography>
-            </Container>
 
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box display="flex" alignItems="center" justifyContent="center" className="mt-4">
                 <form className={classes.root} noValidate autoComplete="off">
 
                     <TextField
@@ -150,7 +173,6 @@ const Home = () => {
                             variant="inline"
                             format="dd/MM/yyyy"
                             margin="normal"
-                            id="date-picker-inline"
                             label="Choose The Order"
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
@@ -179,8 +201,13 @@ const Home = () => {
                     ))}
                 </Row>
             </Container>
+
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+
+                <Alert onClose={handleClose} severity={alertStyle}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </>
     );
 }
-
-export default Home;

@@ -14,6 +14,13 @@ import Paper from '@material-ui/core/Paper';
 
 import Button from "@material-ui/core/Button";
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -89,23 +96,44 @@ export default function Orders() {
     useEffect(()=>{
         getOrder()},[]);
 
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [alertStyle, setAlertStyle] = useState("success");
+    const handleMessage = (text, alert) => {
+        setAlertStyle(alert);
+        setMessage(text);
+        setOpen(true);
+    };
+    
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpen(false);
+        };
+
     const deleteOrder = async (order) => {
         try{
-            await axios.post(
+            const res = await axios.post(
                 'http://localhost:5000/api/delete_order', 
                 {
                     customerID: user.customerID, 
                     orderID: order
                 }
             );
-            console.log({
-                customerID: user.customerID, 
-                orderID: order
-            })
+            console.log(res.data)
+
+            if (res.data === "success"){
+                handleMessage("Success, order successfully deleted", "success");
+            } 
+            else {
+                handleMessage("Error deleting order", "warning");
+            }
         
         }catch(err){
             console.error(err.message);
         }
+    getOrder();
     };
 
     function RaisedButton(props) {
@@ -192,6 +220,13 @@ export default function Orders() {
                     </Table>
                 </TableContainer>
             </Container>
+
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+
+                <Alert onClose={handleClose} severity={alertStyle}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </>
     );
 }
