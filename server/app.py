@@ -4,14 +4,18 @@ import flask_login
 
 import json
 import csv
+import threading
+
+lock = threading.Lock()
+
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Custom packages
-import users
 from orders import Order
 from users import User
 import products
+from users import Users
 import datetime
 import pandas as pd
 
@@ -99,6 +103,7 @@ def place_order():
     else:
         return jsonify("Error, POST requests only please")
 
+
 # https://datatofish.com/export-pandas-dataframe-json/
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
@@ -120,8 +125,7 @@ def delete_order():
         data = request.get_json()
         customerID = data['customerID']
         order_ID = data['orderID']
-        # print(customerID, order_ID)
-
+        # print(customerID, order_ID)        
         return jsonify(Order.deleteUserOrder(customerID, order_ID))
 
 
@@ -131,7 +135,7 @@ def add_user():
         data = request.get_json()
         customerID = data['customerID']
         password = data['password']
-        result = add_new_customer(customerID, password)
+        result = Users.add_new_customer(customerID, password)
 
         return jsonify(result)
 
@@ -154,22 +158,6 @@ def server_error(e):
 @app.errorhandler(501)
 def not_implemented(e):
     return jsonify("ERROR: This URL does not accept the HTTP request sent")
-
-
-def add_new_customer(customerID, password):
-    df_users = pd.read_csv('./users/users.csv')
-    # get the id column
-    df_users = df_users.loc[df_users['userID'] == customerID]
-
-    # if no matches found
-    if df_users.empty:
-        with open("./users/users.csv", "a", newline="") as users_csv:
-            orders_writer = csv.writer(users_csv, delimiter=',')
-            orders_writer.writerow([customerID, password])
-        return "User successfully added"
-    # otherwise username already present
-    else:
-        return "User already exists"
 
 
 if __name__ == '__main__':
