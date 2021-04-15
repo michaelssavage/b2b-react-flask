@@ -1,4 +1,6 @@
 import React, { useState} from 'react';
+import { useHistory } from "react-router-dom";
+import  { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,6 +41,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+
+    const history = useHistory();
+
+    async function handleLogin(){
+        // event.preventDefault();
+
+        try {
+            history.push("/home");
+        } catch (e){
+            alert(e.message);
+        }
+    }
+
     const classes = useStyles();
 
     const [name, setName] = useState("");
@@ -61,7 +76,10 @@ export default function Login() {
         // console.log(res.data);
 
         if (res.data === "Success"){
+            // console.log(res);
             document.cookie = 'id='+name
+            // return <Redirect to='/home'  /> 
+            handleLogin();
         }
 
         }catch(err){
