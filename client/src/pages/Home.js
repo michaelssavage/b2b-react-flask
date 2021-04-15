@@ -1,5 +1,4 @@
 import React, { useState, useEffect} from 'react';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
@@ -35,34 +34,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const products = [
-    {
-        value: 'p1',
-        label: 'Game Boy',
-    },
-    {
-        value: 'p2',
-        label: 'Apples',
-    },
-    {
-        value: 'p3',
-        label: 'Oranges',
-    },
-    {
-        value: 'p4',
-        label: 'Jolt cola',
-    },
-];
-
-var dict = {
-    "p1": "Game Boy",
-    "p2": "Apples",
-    "p3": "Oranges",
-    "p4": "Jolt cola"
-}
+var productDropdown = {};       // dict[value] = label
 
 export default function Home() {
     const classes = useStyles();
+
+    const [products, setProductCards] = useState([]);  // value: pN, label: game boy etc.
 
     const [product, setProduct] = useState([]);
     const getProduct = async () => {
@@ -74,11 +51,24 @@ export default function Home() {
             const productsArray = res.data;
 
             let productsArr = [];
+            let productCards = [];
             for(let i = 0; i < productsArray.length; i++){
+
+                let value = "p" + (i+1).toString();
+                let label = productsArray[i].productName;
+
+                // console.log(value, label
+                //     );
+
                 productsArr.push(productsArray[i]);
+                productCards.push({
+                    value: value,
+                    label: label
+                })
+                productDropdown[value] = label;
             }
-            // console.log(productsArr)
             setProduct(productsArr);
+            setProductCards(productCards);
 
         }catch(err){
             console.error(err.message);
@@ -95,9 +85,14 @@ export default function Home() {
         setQuantity(event.target.value);
     };
 
-    const [selectedDate, setSelectedDate] = useState(new Date('2021-05-13T21:11:54'));
+    let today = moment();
+    const [selectedDate, setSelectedDate] = useState(today._d);
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        if(moment(date).isAfter(today)){
+            setSelectedDate(date);
+        } else {
+            setSelectedDate(today);
+        }
     };
 
     const [open, setOpen] = useState(false);
@@ -118,27 +113,32 @@ export default function Home() {
 
     const PlaceNewOrder = async () => {
 
-        try{
-            const res = await axios.post('http://localhost:5000/api/order',
-                {
-                    customerID: "gerard",
-                    product_name: dict[productOrder],
-                    quantity: quantity,
-                    day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-                    month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+        if(quantity === ""){
+            handleMessage("Make Sure You Enter A Quantity", "info");
+        } else {
+            try{
+                const res = await axios.post('http://localhost:5000/api/order',
+                    {
+                        customerID: "gerard",
+                        product_name: productDropdown[productOrder] + "",
+                        quantity: quantity,
+                        day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
+                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+                    }
+                );
+                console.log(res);
+    
+                if (res.data === "success"){
+                    handleMessage("Order Successful, sufficient stock!", "success");
+                    setQuantity("");
+                } 
+                else {
+                    handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
                 }
-            );
-
-            if (res.data === "success"){
-                handleMessage("Order Successful, sufficient stock!", "success");
-                setQuantity("");
-            } 
-            else {
-                handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
+                getProduct();
+            }catch(err){
+                console.error(err.message);
             }
-            
-        }catch(err){
-            console.error(err.message);
         }
     };
 
@@ -173,6 +173,7 @@ export default function Home() {
                             variant="inline"
                             format="dd/MM/yyyy"
                             margin="normal"
+                            disablePast
                             label="Choose The Order"
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',

@@ -1,15 +1,2 @@
 customerID,orderID,product,quantity,date
-user4,8,oranges,2,14/02/2021
-user4,70,oranges,2,14/02/2021
-user4,97,oranges,2,14/02/2021
-gerard,10,jolt cola,63,15/05/2021
-gerard,51,jolt cola,3,13/05/2021
-gerard,18,jolt cola,3,13/05/2021
-gerard,18,game boy,4,13/05/2021
-gerard,84,game boy,4,13/05/2021
-gerard,10,game boy,8,13/05/2021
-gerard,84,game boy,2,13/05/2021
-gerard,51,game boy,2,13/05/2021
-gerard,4,jolt cola,4,13/05/2021
-gerard,13,jolt cola,4,13/05/2021
-gerard,78,jolt cola,5,13/05/2021
+gerard,60,Big Bag Of Cans,34,15/04/2021

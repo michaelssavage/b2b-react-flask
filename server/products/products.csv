@@ -1,10 +1,7 @@
 productName,stock_quantity,monthly_restock_date,restock_quantity
-game boy,725,1,45
-apples,3302,11,450
-oranges,392,10,5645
-jolt cola,3718,21,3445
-jola mola,46,3,44
-maltesers,458,22,12
-water,3002,13,390
-big bag of cans,105,12,420
-Paper,23,17,234
+Game Boy,716,1,45
+Apples,3298,11,450
+Oranges,61,10,5645
+Jolt Cola,3718,21,3445
+Maltesers,458,22,12
+Big Bag Of Cans,71,12,420

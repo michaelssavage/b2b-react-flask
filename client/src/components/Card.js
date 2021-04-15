@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Card } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 
@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,33 +40,42 @@ const useStyles = makeStyles((theme) => ({
 export default function ProductCard({ product }) {
 
     const classes = useStyles();
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState("");
 
     const handleChange = (event) => {
         setDate(event.target.value);
+        // console.log(event.target.value);
+        getProjection(event.target.value);
     };
 
-    {/*
-    const [projection, setProjection] = useState([]);
-    const getProduct = async () => {
+    const [projection, setProjection] = useState(0);
+    const getProjection = async (currentDate) => {
         try{
-            const res = axios.post(http://localhost:5000/availability_future, 
+
+            // console.log(currentDate);
+            const res = await axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
-                    date: date
+                    date: currentDate
                 }
             );
+            console.log({
+                product: product.productName,
+                date: date
+            });
 
-            console.log(res.data);
+            console.log({
+                    product: product.productName,
+                    date: currentDate
+                });
+
+            console.log(res);
+
+            setProjection(res.data);
         }catch(err){
             console.error(err.message);
         }
     };
-
-    useEffect(() => {
-        getProjection();
-    }, [])
-    */}
 
     return (
         <>
@@ -98,23 +108,24 @@ export default function ProductCard({ product }) {
                         </AccordionSummary>
                         <AccordionDetails>
 
-                            <FormControl variant="outlined" className={classes.formControl}>
+                            <FormControl variant="filled" className={classes.formControl}>
 
-                                <InputLabel>
-                                    Date
-                                </InputLabel>
-
-                                <Select value={date} onChange={handleChange}
+                                <InputLabel id="demo-simple-select-outlined-label">Date</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={date}
+                                    onChange={handleChange}
+                                    label="Date"
                                 >
-                                    <MenuItem value={10}>1 Month</MenuItem>
-                                    <MenuItem value={20}>3 Months</MenuItem>
-                                    <MenuItem value={30}>6 Months</MenuItem>
+                                    <MenuItem value="1">1 Month</MenuItem>
+                                    <MenuItem value="3">3 Months</MenuItem>
+                                    <MenuItem value="6">6 Months</MenuItem>
                                 </Select>
                             </FormControl>
 
                             <Typography className={classes.projection}>
-                                Projections for {product.productName}: 
-                                                                    {/* {projection} */}
+                                Projections for {product.productName}: {projection}
                             </Typography>
                         </AccordionDetails>
 

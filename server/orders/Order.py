@@ -14,31 +14,22 @@ lock = threading.Lock()
 class Order:
     def __init__(self, customerID, product, date, quantity):
         self.customerID = customerID
-        self.order_id = self.getOrderID()
+        self.orderID = self.getOrderID(customerID)
         self.product = product
         self.date = date
         self.quantity = quantity
 
-    def prettyPrint(self):
-        return("Customer {}, has ordered {} {} on {}".format(self.customerID, self.quantity, self.product, self.date))
-
-    def toJSON(self):
-        order = {
-            "date": self.date,
-            "product": self.product,  
-            "quantity": self.quantity
-        }
-        return order
-
     def toCSV(self):
-        order = [self.customerID, self.order_id, self.product, self.quantity, self.date]
+        order = [self.customerID, self.orderID, self.product, self.quantity, self.date]
         return order
 
-    # TODO better way of picking order numbers
-    # maybe use row count of orders related to cutomer id
-    def getOrderID(self):
-        num = random.randint(1,100)
-        return num
+    def getOrderID(self, customerID):
+        df_orders = pd.read_csv(orders_file)
+        df_orders.loc[df_orders['customerID'] == customerID]
+        numOrders = len(df_orders.index)
+        # random method of allocating order number
+        orderNum = int(numOrders) + random.randint(numOrders + 10, 1000)
+        return orderNum
 
 
 def deleteUserOrder(customerID, order_ID):
@@ -48,7 +39,7 @@ def deleteUserOrder(customerID, order_ID):
     df_products = pd.read_csv(products_file)
 
     try:
-    # locate the customers order and details
+        # locate the customers order and details
         order = df_orders.loc[(df_orders['customerID'] == customerID) & (df_orders['orderID'] == order_ID)]
         product = order['product'].item()
         quantity = order['quantity'].item()
@@ -66,7 +57,6 @@ def deleteUserOrder(customerID, order_ID):
         # rewrite back to file
         df_orders.to_csv(orders_file, index = False, sep=',')
         lock.release()
-        # TODO: add locks here
         return "success" # Success, order successfully deleted
     except Exception:
         lock.release()
@@ -87,6 +77,8 @@ def placeOrder(order):
     # order details
     product = order.product
     quantity = order.quantity
+
+    print(product, quantity)
     # acquire lock
     lock.acquire()
     # stock details
@@ -105,8 +97,7 @@ def placeOrder(order):
         # update stock
         new_stock_level = stock_level - quantity
         df_products.at[product_row_num, 'stock_quantity'] = new_stock_level
-
-
+        # update value on file
         df_products.to_csv(products_file, index = False, sep=',')
         # release the lock
         lock.release()
@@ -114,14 +105,3 @@ def placeOrder(order):
     else:
         lock.release()
         return "failed"
-
-# for testing
-def localPlaceOrder():
-    order_date = datetime.datetime(datetime.datetime.now().year, 3, 1)
-    print(placeOrder(Order("user43", "jolt cola", order_date.strftime("%d/%m/%Y"), 200)))
-
-
-if __name__ == '__main__':
-    # print(getUserOrders("user4"))
-    print(deleteUserOrder("user43", 97))
-    # localPlaceOrder()
