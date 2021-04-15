@@ -6,6 +6,7 @@ class LoginHandler:
         self.file = "./users/users.csv"
 
     def signUp(self, name, password):
+        success = True
         fieldnames = ['name', 'password']
         with open(self.file,  mode='a+', encoding="utf-8", newline='') as csvfile:
 
@@ -13,10 +14,11 @@ class LoginHandler:
 
             if self.alreadyExists(name):
                 print("That username already exists")
+                success = False
             else:
                 writer.writerow({"name": name, "password": password})
                 print("signup created")
-        return None
+        return success
 
     def alreadyExists(self, name):
         exists = False

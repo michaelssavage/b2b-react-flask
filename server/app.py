@@ -50,7 +50,21 @@ def login():
             return make_response(jsonify("Success"), 200)
 
     # unauthorised
-    return make_response(jsonify('Bad login'), 401)
+    return make_response(jsonify("Username Or Password Is Incorrect"))
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    if request.method == 'POST':
+        data = request.get_json()
+        customerID = data['name']
+        password = data['password']
+
+        if loginHandler.signUp(customerID, password):
+            # success
+            return make_response(jsonify("Success"), 200)
+
+    # unauthorised
+    return make_response(jsonify("This User Already Exists"))
 
 
 @app.route("/api/products", methods=["GET"])

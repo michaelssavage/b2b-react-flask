@@ -1,6 +1,5 @@
 import React, { useState} from 'react';
 import { useHistory } from "react-router-dom";
-import  { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -60,12 +59,10 @@ export default function Login() {
     const [password, setPassword] = useState("");
     function handleSubmit(event){
         event.preventDefault()
-        console.log( 'name:', name, 'Password: ', password); 
         sendLogin()
     }
 
     const sendLogin = async () => {
-
         try{
             const res = await axios.post('http://localhost:5000/api/login', {
                 withCredentials: true,
@@ -80,6 +77,8 @@ export default function Login() {
             document.cookie = 'id='+name
             // return <Redirect to='/home'  /> 
             handleLogin();
+        } else {
+            handleMessage(res.data, "error");
         }
 
         }catch(err){
