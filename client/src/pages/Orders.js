@@ -60,7 +60,7 @@ export default function Orders() {
     const [orders, setOrders] = useState([]);
 
     const user = { 
-        customerID: "gerard"
+        customerID: document.cookie.slice(3)
     };
     
     const getOrder = async () => {

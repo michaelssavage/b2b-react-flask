@@ -113,13 +113,15 @@ export default function Home() {
 
     const PlaceNewOrder = async () => {
 
+
         if(quantity === ""){
             handleMessage("Make Sure You Enter A Quantity", "info");
         } else {
+
             try{
                 const res = await axios.post('http://localhost:5000/api/order',
                     {
-                        customerID: "gerard",
+                        customerID: document.cookie.slice(3),
                         product_name: productDropdown[productOrder] + "",
                         quantity: quantity,
                         day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
