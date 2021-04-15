@@ -1,17 +1,18 @@
 import requests
 # import pytest
+base_url = 'http://127.0.0.1:5000/api'
 
 def test_login():
     r = requests.post(
-        'http://127.0.0.1:5000/api/login', 
+        base_url + '/login', 
         json={"kevin": "123456"})
     assert r.status_code == 200
 
 def test_place_order():
     r = requests.post(
-        'http://127.0.0.1:5000/api/order', 
+        base_url + '/order', 
         json={
-            "customer_id" : "user4", 
+            "customerID" : "user4", 
             "product_name": "oranges", 
             "quantity" : 2, 
             "day": 14, 
@@ -23,34 +24,42 @@ def test_place_order():
 
 def get_orders():
     r = requests.post(
-        'http://127.0.0.1:5000/api/check_orders', 
-        json={"customer_id" : "user4"}
+        base_url + '/check_orders', 
+        json={"customerID" : "user4"}
         )
     print(r.content)
     print(r.status_code)
 
 def add_new_user():
     r = requests.post(
-        'http://127.0.0.1:5000/api/add_customer', 
+        base_url + '/add_customer', 
         json={
-            "customer_id" : "henry", 
+            "customerID" : "henry", 
             "password": "theHoover"}
         )
     print(r.content)
 
 def delete_order():
     r = requests.post(
-        'http://127.0.0.1:5000/api/delete_order', 
+        base_url + '/delete_order', 
         json={
-            "customer_id" : "user43", 
-            "orderID": 23
+            "customerID" : "user4", 
+            "orderID": 44
             }
+        )
+    print(r.content)
+
+
+def get_products():
+    r = requests.get(
+        base_url + '/products'
         )
     print(r.content)
 
 
 if __name__ == '__main__':
     # test_place_order()
-    add_new_user()
+    # add_new_user()
     # get_orders()
     # delete_order()
+    get_products()

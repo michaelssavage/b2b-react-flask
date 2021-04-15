@@ -51,6 +51,11 @@ export default function Navbar() {
                 </Link>
 
             </Toolbar>
+
+            <Typography variant="h3" align="center" className="mb-3">
+                    Concurr B2B Order System
+            </Typography> 
+
         </AppBar>
         </div>
     );

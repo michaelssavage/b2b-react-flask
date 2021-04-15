@@ -1,56 +1,66 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
+import flask_login
+
 import json
 import csv
+import threading
+
+lock = threading.Lock()
 
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Custom packages
-import users
 from orders import Order
-import products
+from users import User
+from products import Product
+from users import Users
 import datetime
 import pandas as pd
 
-users = {
-    "john": generate_password_hash("hello"),
-    "susan": generate_password_hash("bye")
-}
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
+app.secret_key = 'super secret string'  # Change this!
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+# auth = HTTPBasicAuth()
 cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and check_password_hash(users.get(username), password):
-        return username
+users = {'foo@bar.tld': {'password': 'secret'}}
 
-@app.route('/')
-@auth.login_required
-def index():
-    return jsonify("Hello, {}!".format(auth.current_user()))
+@app.route('/api/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json()
+        customerID = data['name']
+        password = data['password']
+
+        if password == users[customerID]['password']:
+            user = User.User()
+            user.id = customerID
+            flask_login.login_user(user)
+            # success
+            return make_response(jsonify("Success"), 201)
+
+    # unauthorised
+    return make_response(jsonify('Bad login'), 401)
+
+
+@app.route('/api/protected', methods=["GET"])
+@flask_login.login_required
+def protected():
+    return jsonify('Logged in as: ' + flask_login.current_user.id)
 
 
 @app.route("/api/products", methods=["GET"])
 def home():
     # read products file
     if (request.method == 'GET'):
-        with open('./products/products.json', "r") as json_file:
-            data = json.load(json_file)
-    
-    return jsonify(data)
-
-
-# Login as a specific customer ID
-@app.route("/api/login", methods=["POST"])
-def login():
-    if (request.method == 'POST'):
-        data = request.get_json()
-
-    return jsonify("Howdy ", data)
+        return Product.getproducts()
+    else:
+        return make_response()
 
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
@@ -76,15 +86,15 @@ def place_order():
         # parse order details
         data = request.get_json()
 
-        customer_id = data['customer_id']
-        product = data['product_name']
-        quantity = data['quantity']
-        day = data['day']
-        month = data['month']
+        customerID = data['customerID']
+        product = data['product_name'].lower()
+        quantity = int(data['quantity'])
+        day = int(data['day'])
+        month = int(data['month'])
 
         order_date = datetime.datetime(datetime.datetime.now().year, month, day)
         
-        cust_order = Order.Order(customer_id, product, order_date.strftime("%d/%m/%Y"), quantity)
+        cust_order = Order.Order(customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
         
         result = Order.placeOrder(cust_order)
         return jsonify(result)
@@ -92,16 +102,16 @@ def place_order():
     else:
         return jsonify("Error, POST requests only please")
 
+
 # https://datatofish.com/export-pandas-dataframe-json/
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
     if (request.method == 'POST'):
         # parse and return order file
         data = request.get_json()
-        customer_id = data['customer_id']
+        customerID = data['customerID']
 
-        Order.getUserOrders(customer_id)
-
+        return Order.getUserOrders(customerID)
 
     else:
         return jsonify("Error, POST requests only please")
@@ -112,19 +122,19 @@ def delete_order():
     if (request.method == 'POST'):
         # parse and return order file
         data = request.get_json()
-        customer_id = data['customer_id']
+        customerID = data['customerID']
         order_ID = data['orderID']
-
-        return jsonify(Order.deleteUserOrder(customer_id, order_ID))
+        # print(customerID, order_ID)        
+        return jsonify(Order.deleteUserOrder(customerID, order_ID))
 
 
 @app.route("/api/add_customer", methods=["POST"])
 def add_user():
     if (request.method == 'POST'):        
         data = request.get_json()
-        customer_id = data['customer_id']
+        customerID = data['customerID']
         password = data['password']
-        result = add_new_customer(customer_id, password)
+        result = Users.add_new_customer(customerID, password)
 
         return jsonify(result)
 
@@ -147,22 +157,6 @@ def server_error(e):
 @app.errorhandler(501)
 def not_implemented(e):
     return jsonify("ERROR: This URL does not accept the HTTP request sent")
-
-
-def add_new_customer(customer_id, password):
-    df_users = pd.read_csv('./users/users.csv')
-    # get the id column
-    df_users = df_users.loc[df_users['userID'] == customer_id]
-
-    # if no matches found
-    if df_users.empty:
-        with open("./users/users.csv", "a", newline="") as users_csv:
-            orders_writer = csv.writer(users_csv, delimiter=',')
-            orders_writer.writerow([customer_id, password])
-        return "User successfully added"
-    # otherwise username already present
-    else:
-        return "User already exists"
 
 
 if __name__ == '__main__':

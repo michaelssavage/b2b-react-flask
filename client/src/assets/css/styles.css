@@ -9,11 +9,13 @@ footer{
     
 
 .bg-color {
-    background-color: #009688
-    ;
+    background-color: #00695f;
 }
 
 .table-color {
-    background-color: #e91e63
+    background-color: #e91e63;
+}
 
+.place-order {
+    background-color: #4caf50;
 }
