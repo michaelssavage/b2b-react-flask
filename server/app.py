@@ -64,9 +64,9 @@ def home():
 
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
-@app.route("/api/availability_future", methods=["GET"])
+@app.route("/api/availability_future", methods=["POST"])
 def check_availability_future():
-    if (request.method == 'GET'):
+    if (request.method == 'POST'):
         data = request.get_json()
         product = data['product']
         timePeriod = data['date']
