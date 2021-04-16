@@ -115,7 +115,7 @@ def place_order():
         cust_order = Order.Order(a, customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
         
         result = Order.placeOrder(a, cust_order)
-        return jsonify(result)
+        return result
 
 
 @app.route("/api/check_orders", methods=["POST"])
@@ -135,7 +135,7 @@ def delete_order():
         customerID = data['customerID']
         order_ID = data['orderID']
         # print(customerID, order_ID)        
-        return jsonify(Order.deleteUserOrder(a, customerID, order_ID))
+        return Order.deleteUserOrder(a, customerID, order_ID)
 
 
 @app.route("/api/add_customer", methods=["POST"])

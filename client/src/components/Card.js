@@ -88,7 +88,7 @@ export default function ProductCard({ product }) {
                         </Card.Title>
 
                         <ListGroup variant="flush">
-                            <ListGroup.Item>Stock Quantity: {product.stock_quantity}</ListGroup.Item>
+                            <ListGroup.Item>Current Stock: {product.stock_quantity}</ListGroup.Item>
                             <ListGroup.Item>Monthly Restock Date: {product.monthly_restock_date}</ListGroup.Item>
                             <ListGroup.Item>Restock Quantity: {product.restock_quantity}</ListGroup.Item>
                         </ListGroup>

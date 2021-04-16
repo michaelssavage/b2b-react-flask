@@ -45,9 +45,6 @@ def getFutureAvailability(a, product, time):
             df_products = df_products.loc[df_products['productName'] == product]
             df_orders = df_orders.loc[df_orders['product'] == product]
 
-            # total orders for this product from all clients
-            totalProductOrders = df_orders['quantity'].sum()
-
             # need to compare this with the stock and restocking rate
             product_row_num = df_products[df_products['productName'] == product].index[0]
             stock_level = df_products.loc[product_row_num]['stock_quantity']
@@ -55,7 +52,8 @@ def getFutureAvailability(a, product, time):
             productRestockQuantity = df_products.loc[product_row_num]['restock_quantity']
             restockingForThisPeriod = productRestockQuantity * time
 
-            projectedAvailability = (stock_level + restockingForThisPeriod) - totalProductOrders
+            # stock level already accounts for current orders
+            projectedAvailability = stock_level + restockingForThisPeriod
             return int(projectedAvailability)
         except Exception as e:
             return e
