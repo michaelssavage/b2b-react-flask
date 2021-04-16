@@ -1,26 +1,20 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 
-import json
-import csv
-import threading
 import datetime
-import pandas as pd
 from readerwriterlock import rwlock
 
 # LOCKS
 # a fair priority lock
-a = rwlock.RWLockFairD()
+lock = rwlock.RWLockFairD()
 
 # Custom packages
-from orders import Order
-from products import Product
-from users.Users import Users
-from users import loginHandler, Users
-
+from orders.Order import Order, placeOrder, getUserOrders, deleteUserOrder
+from products.Product import getFutureAvailability, getProducts
+from users import loginHandler
 
 app = Flask(__name__)
-loginHandler = loginHandler.LoginHandler(a)
+loginHandler = loginHandler.LoginHandler(lock)
 
 cors = CORS(
     app, 
@@ -34,7 +28,6 @@ cors = CORS(
         }
     )
 
-
 @app.route('/api/login', methods=['POST'])
 def login():
     if request.method == 'POST':
@@ -44,11 +37,10 @@ def login():
 
         if loginHandler.checkLogin(customerID, password):
             # success
-            return make_response(jsonify("Success"), 201)
-
-    # unauthorised
-    return make_response(jsonify("Username Or Password Is Incorrect"), 401)
-
+            return make_response("Success", 201)
+        else:
+            # unauthorised
+            return make_response("Username Or Password Is Incorrect", 401)
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -59,20 +51,16 @@ def signup():
 
         if loginHandler.signUp(customerID, password):
             # success
-            return make_response(jsonify("Success"), 201)
-
-    # unauthorised
-    return make_response(jsonify("This User Already Exists"),401)
-
+            return make_response("Success", 201)
+        else:
+            # unauthorised
+            return make_response("This User Already Exists", 401)
 
 @app.route("/api/products", methods=["GET"])
 def home():
     # read products file
     if (request.method == 'GET'):
-        return Product.getproducts(a)
-    else:
-        return make_response()
-
+        return getProducts(lock)
 
 # Provide a list of projected product availability over the next 6 months (given restocks and current orders).
 @app.route("/api/availability_future", methods=["POST"])
@@ -81,21 +69,12 @@ def check_availability_future():
         data = request.get_json()
         product = data['product']
         timePeriod = data['date']
-        result = Product.getFutureAvailability(
-                    a,
+        result = getFutureAvailability(
+                    lock,
                     product, 
                     int(timePeriod)
                 )
         return jsonify(result)
-
-
-# Check the available quantity of a product given a specified day and time.
-@app.route("/api/availability_check", methods=["GET"])
-def check_availability():                                                           # TODO
-    if (request.method == 'GET'):
-        # need to parse quantity and product from json body
-        return jsonify("Some weather hi")
-
 
 # Place order
 @app.route("/api/order", methods=["POST"])
@@ -111,12 +90,8 @@ def place_order():
         month = int(data['month'])
 
         order_date = datetime.datetime(datetime.datetime.now().year, month, day)
-        
-        cust_order = Order.Order(a, customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
-        
-        result = Order.placeOrder(a, cust_order)
-        return result
-
+        cust_order = Order(lock, customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
+        return placeOrder(lock, cust_order)
 
 @app.route("/api/check_orders", methods=["POST"])
 def check_orders():
@@ -124,8 +99,7 @@ def check_orders():
         # parse and return order file
         data = request.get_json()
         customerID = data['customerID']
-        return Order.getUserOrders(a, customerID)
-    
+        return getUserOrders(lock, customerID)
 
 @app.route("/api/delete_order", methods=["POST"])
 def delete_order():
@@ -135,7 +109,7 @@ def delete_order():
         customerID = data['customerID']
         order_ID = data['orderID']
         # print(customerID, order_ID)        
-        return Order.deleteUserOrder(a, customerID, order_ID)
+        return deleteUserOrder(lock, customerID, order_ID)
 
 
 #################################################

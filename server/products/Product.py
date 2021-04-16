@@ -5,21 +5,14 @@ from dateutil.relativedelta import relativedelta
 orders_file = "./orders/orders.csv"
 products_file = "./products/products.csv"
 
-class Product:
-    def __init__(self, name, quantity, restock_date, restock_quantity):
-        self.name = name
-        self.quantity = quantity
-        self.restock_date = restock_date
-        self.restock_quantity = restock_quantity
-
-
-def getproducts(a):
+def getProducts(a):
     # read lock
     b = a.gen_rlock()
     if b.acquire(blocking=True, timeout=5):
         try:
             # read file and return as json
             df_products = pd.read_csv("./products/products.csv")
+            # return as a json array
             return df_products.to_json(orient='records')
         finally:
             b.release()
