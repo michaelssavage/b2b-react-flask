@@ -89,8 +89,6 @@ export default function Orders() {
         }
     };
 
-    useEffect(()=>{
-        getOrder()},[]);
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -135,6 +133,10 @@ export default function Orders() {
             </Button>
         );
     }
+
+    useEffect(()=>{
+        getOrder();
+    }, []);
 
     return (
         <>

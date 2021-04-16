@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
     const classes = useStyles();
 
+    const isLoggedOut = document.cookie.slice(3) === ""
+    console.log(document.cookie.slice(3));
     const history = useHistory();
     async function handleSignOut(){
         document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -44,6 +46,12 @@ export default function Navbar() {
             alert(e.message);
         }
     }
+
+    useEffect(()=>{
+        if(isLoggedOut){
+            handleSignOut()
+        }
+    }, [isLoggedOut]);
 
     return (
         <div className={classes.root}>
