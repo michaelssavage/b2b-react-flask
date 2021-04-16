@@ -11,7 +11,7 @@ products_file = "./products/products.csv"
 
 class Order:
     def __init__(self, a, customerID, product, date, quantity):
-        self.reader_lock = a.gen_rlock()
+        self.a = a
         self.customerID = customerID
         self.orderID = self.getOrderID(customerID)
         self.product = product
@@ -23,7 +23,8 @@ class Order:
         return order
 
     def getOrderID(self, customerID):
-        if self.reader_lock.acquire(blocking=True, timeout=5):
+        b = self.a.gen_rlock()
+        if b.acquire(blocking=True, timeout=5):
             try:
                 df_orders = pd.read_csv(orders_file)
                 df_orders.loc[df_orders['customerID'] == customerID]
@@ -32,17 +33,21 @@ class Order:
                 orderID = int(numOrders) + random.randint(numOrders + 10, 1000)
                 return orderID
             finally:
-                self.reader_lock.release()
+                b.release()
 
 
-def getUserOrders(customerID):
-    df = pd.read_csv(orders_file)
-    try:
-        df = df.loc[df['customerID'] == customerID]
-        # specify the way to print
-        return df.to_json(orient='records')
-    except Exception:
-        return "No orders for this user :("
+def getUserOrders(a, customerID):
+    b = a.gen_rlock()
+    if b.acquire(blocking=True, timeout=5):
+        try:
+            df = pd.read_csv(orders_file)
+            df = df.loc[df['customerID'] == customerID]
+            # specify the way to print
+            return df.to_json(orient='records')
+        except Exception:
+            return "No orders for this user :("
+        finally:
+            b.release()
 
 
 def deleteUserOrder(a, customerID, order_ID):

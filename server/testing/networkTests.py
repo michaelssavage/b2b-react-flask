@@ -9,32 +9,6 @@ users = ["john", "mary", "columbus", "gerard", "michael", "jospeh", "brendan", "
 passwords = ["pass", "password", "betterPassword", "password1", "passwordsRule", "iforgotmypassword", "mydogryan", "ca4006", "DCU", "case4"]
 
 
-
-
-def test_place_order():
-    r = requests.post(
-        base_url + '/order', 
-        json={
-            "customerID" : "user4", 
-            "product_name": "oranges", 
-            "quantity" : 2, 
-            "day": 14, 
-            "month": 2
-            }
-        )
-    print(r.content)
-    print(r.status_code)
-
-
-def get_orders():
-    r = requests.post(
-        base_url + '/check_orders', 
-        json={"customerID" : "user4"}
-        )
-    print(r.content)
-    print(r.status_code)
-
-
 def delete_order():
     r = requests.post(
         base_url + '/delete_order', 
@@ -46,13 +20,6 @@ def delete_order():
     print(r.content)
 
 
-def get_products():
-    r = requests.get(
-        base_url + '/products'
-        )
-    print(r.content)
-
-
 def add_new_user(user, password):
     r = requests.post(
         base_url + '/signup', 
@@ -60,19 +27,8 @@ def add_new_user(user, password):
             "customerID" : user, 
             "password": password}
         )
+    assert r.content != None
     assert r.status_code == 201
-
-
-def test_login(username, password):
-    r = requests.post(
-        base_url + '/login', 
-        json={
-            'name': username,
-            'password': password
-            }
-        )
-    assert r.status_code == 200
-
 
 def multiUserSignup():
     jobs = []
@@ -90,6 +46,18 @@ def multiUserSignup():
 
     print("Sign ups complete")
 
+
+def test_login(username, password):
+    r = requests.post(
+        base_url + '/login', 
+        json={
+            'name': username,
+            'password': password
+            }
+        )
+    assert r.content != None
+    assert r.status_code == 201
+
 def multiUserLogin():
     jobs = []
     for i in range(10):
@@ -98,7 +66,7 @@ def multiUserLogin():
 
     for j in jobs:
         # random start times
-        time.sleep(random.randint(1,5))
+        # time.sleep(random.randint(1,5))
         j.start()
 
     for j in jobs:
@@ -107,5 +75,91 @@ def multiUserLogin():
     print("Log ins complete")
 
 
+def get_products():
+    r = requests.get(
+        base_url + '/products'
+        )
+    assert r.content != None
+    assert r.status_code == 200
+
+def multiUserStockCheck():
+    jobs = []
+    for _ in range(10):
+        t = threading.Thread(target=get_products)
+        jobs.append(t)
+
+    for j in jobs:
+        # random start times
+        # time.sleep(random.randint(1,5))
+        j.start()
+
+    for j in jobs:
+        j.join()
+
+    print("Stock Checks complete")
+
+
+def test_place_order(user):
+    products = ['Game Boy', 'Apples', 'Oranges', 'Lemons', 'Maltesers', 'Fizzy Drinks']
+    product = random.choice(products)
+    quantity = random.randint(1, 10)
+    day = random.randint(1,28)
+    month = random.randint(1,12)
+
+    r = requests.post(
+        base_url + '/order', 
+        json={
+            "customerID" : user, 
+            "product_name": product, 
+            "quantity" : quantity, 
+            "day": day, 
+            "month": month
+            }
+        )
+    assert r.content != None
+    assert r.status_code == 201
+
+def multiUserOrder():
+    jobs = []
+    for i in range(10):
+        t = threading.Thread(target=test_place_order, args=(users[i],))
+        jobs.append(t)
+
+    for j in jobs:
+        # random start times
+        # time.sleep(random.randint(1,5))
+        j.start()
+
+    for j in jobs:
+        j.join()
+
+    print("Orders Complete")
+
+
+def get_orders(user):
+    r = requests.post(
+        base_url + '/check_orders', 
+        json={"customerID" : user}
+        )
+    assert r.content != None
+    assert r.status_code == 200
+
+def multiUserGetOrders():
+    jobs = []
+    for i in range(10):
+        t = threading.Thread(target=get_orders, args=(users[i],))
+        jobs.append(t)
+
+    for j in jobs:
+        # random start times
+        # time.sleep(random.randint(1,5))
+        j.start()
+
+    for j in jobs:
+        j.join()
+
+    print("Order Checks Complete")
+
+    
 if __name__ == '__main__':
-    multiUserLogin()
+    multiUserGetOrders()
