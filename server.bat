@@ -1,4 +1,5 @@
 echo ON
+where python || echo Python is not installed
 cd server
 python -m venv env
 call env\Scripts\activate.bat

@@ -1,3 +1,12 @@
+# B2B ordering system with ReactJS and Flask
+
+## Versions
+NodeJS needs to be installed to run the client with npm and Python needs to be installed to run the Flask server. Applications versions:
+- npm -v is 6.14.8
+- python --version is 3.9.2
+
+The following commands can easily be run using the client.bat and server.bat scripts.
+
 # cd client 
 
 ## npm install
@@ -5,7 +14,6 @@ install all the node_modules.
 
 ## npm start 
 start the client.
-
 
 # cd server
 
