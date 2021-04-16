@@ -119,7 +119,8 @@ export default function Home() {
                         product_name: productDropdown[productOrder] + "",
                         quantity: quantity,
                         day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM'),
+                        year: moment(selectedDate, 'DD/MM/YYYY').format('MM')
                     }
                 );
                 if (res.status === 200){

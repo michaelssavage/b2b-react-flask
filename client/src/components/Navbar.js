@@ -37,8 +37,10 @@ export default function Navbar() {
 
     const history = useHistory();
     async function handleSignOut(){
+        // set cookie to expire 
         document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         try {
+            // move use to login page
             history.push("/login");
         } catch (e){
             alert(e.message);

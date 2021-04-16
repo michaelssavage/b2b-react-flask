@@ -51,25 +51,23 @@ export default function ProductCard({ product }) {
     const [projection, setProjection] = useState(0);
     const getProjection = async (currentDate) => {
         try{
-
-            // console.log(currentDate);
             const res = await axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
                     date: currentDate
                 }
             );
-            console.log({
-                product: product.productName,
-                date: date
-            });
+            // console.log({
+            //     product: product.productName,
+            //     date: date
+            // });
 
-            console.log({
-                    product: product.productName,
-                    date: currentDate
-                });
+            // console.log({
+            //         product: product.productName,
+            //         date: currentDate
+            //     });
 
-            console.log(res);
+            // console.log(res);
 
             setProjection(res.data);
         }catch(err){

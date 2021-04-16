@@ -2,7 +2,7 @@ import json
 import csv
 import random
 import pandas as pd
-import datetime
+from datetime import datetime
 import threading
 from flask import make_response
 
@@ -104,7 +104,10 @@ def placeOrder(a, order):
             product_row_num = df_products[df_products['productName'] == product].index[0]
             stock_level = df_products.loc[product_row_num]['stock_quantity']
 
-            # check if sufficient stock available to filfill order
+            # if order date is in the future after a restock date
+            # may need to account for future available stock
+
+            # if order date is between now and before the restock date, use the current stock
             if stock_level - quantity >= 0:
                 # add order to orders file
                 with open(orders_file, "a", newline="") as orders_csv:
