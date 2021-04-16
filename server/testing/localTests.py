@@ -1,5 +1,7 @@
-from Order import placeOrder, deleteUserOrder, getUserOrders
-from Product import getFutureAvailability
+from orders.Order import Order
+from orders.Order import placeOrder, deleteUserOrder, getUserOrders
+from products.Product import getFutureAvailability
+from users.loginHandler import LoginHandler
 import datetime
 
 def localPlaceOrder():
@@ -14,3 +16,8 @@ def localGetOrder():
 
 def localGetFutureAvailability():
     print(getFutureAvailability("oranges", 1))
+
+def localCheckLogin():
+    login = LoginHandler()
+    print(login.signUp("gerard", "jo"))
+    print(login.checkLogin("test","pass"))
