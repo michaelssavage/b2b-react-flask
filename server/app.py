@@ -6,7 +6,7 @@ from readerwriterlock import rwlock
 
 # LOCKS
 # a fair priority lock
-lock = rwlock.RWLockFairD()
+lock = rwlock.RWLockFair()
 
 # Custom packages
 from orders.Order import Order, placeOrder, getUserOrders, deleteUserOrder

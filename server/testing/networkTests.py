@@ -165,6 +165,9 @@ def multiUserGetOrders():
 
     
 if __name__ == '__main__':
-    # multiUserGetOrders()
-    # multiUserOrder()
+    # decide tests to run by commenting and uncommenting
+    # multiUserSignup()
+    multiUserLogin()
+    multiUserStockCheck()
+    multiUserOrder()
     multiUserGetOrders()
