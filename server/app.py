@@ -16,7 +16,7 @@ a = rwlock.RWLockFairD()
 from orders import Order
 from products import Product
 from users.Users import Users
-from users import loginHandler
+from users import loginHandler, Users
 
 
 app = Flask(__name__)
@@ -54,7 +54,7 @@ def login():
 def signup():
     if request.method == 'POST':
         data = request.get_json()
-        customerID = data['name']
+        customerID = data['customerID']
         password = data['password']
 
         if loginHandler.signUp(customerID, password):
@@ -136,16 +136,6 @@ def delete_order():
         order_ID = data['orderID']
         # print(customerID, order_ID)        
         return Order.deleteUserOrder(a, customerID, order_ID)
-
-
-@app.route("/api/add_customer", methods=["POST"])
-def add_user():
-    if (request.method == 'POST'):        
-        data = request.get_json()
-        customerID = data['customerID']
-        password = data['password']
-        result = Users.add_new_customer(a, customerID, password)
-        return jsonify(result)
 
 
 #################################################

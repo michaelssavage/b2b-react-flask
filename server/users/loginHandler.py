@@ -24,28 +24,34 @@ class LoginHandler:
                     self.writer_lock.release()
 
     def alreadyExists(self, name):
+        status = False
         if self.reader_lock.acquire(blocking=True, timeout=5):
             try:
                 df = pd.read_csv(self.file)
                 df = df.loc[df['userID'] == name]
 
                 if df.empty:
-                    return False
+                    status = False
                 else:
-                    return True
+                    status = True
             finally:
                 self.reader_lock.release()
+                
+            return status
 
 
     def checkLogin(self, name, password):
+        status = False
         if self.reader_lock.acquire(blocking=True, timeout=5):
             try:
                 df = pd.read_csv(self.file)
                 df = df.loc[(df['userID'] == name) & (df['password'] == password)]
 
                 if df.empty:
-                    return False
+                    status = False
                 else:
-                    return True
+                    status = True
             finally:
                 self.reader_lock.release()
+
+            return status

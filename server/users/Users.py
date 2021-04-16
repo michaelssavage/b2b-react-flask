@@ -7,7 +7,7 @@ class Users:
         self.users_file = './users/users.csv'
         self.writer_lock = a.gen_wlock()
 
-    def add_new_customer(self, a, customerID, password):
+    def add_new_customer(self, customerID, password):
         if self.writer_lock.acquire(blocking=True, timeout=5):
             try:
                 df_users = pd.read_csv(self.users_file)

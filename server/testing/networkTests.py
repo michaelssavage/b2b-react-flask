@@ -1,13 +1,15 @@
+import threading
 import requests
-# import pytest
+import time
+import random
 
 base_url = 'http://127.0.0.1:5000/api'
 
-def test_login():
-    r = requests.post(
-        base_url + '/login', 
-        json={"kevin": "123456"})
-    assert r.status_code == 200
+users = ["john", "mary", "columbus", "gerard", "michael", "jospeh", "brendan", "patrick", "andrew", "david"]
+passwords = ["pass", "password", "betterPassword", "password1", "passwordsRule", "iforgotmypassword", "mydogryan", "ca4006", "DCU", "case4"]
+
+
+
 
 def test_place_order():
     r = requests.post(
@@ -23,6 +25,7 @@ def test_place_order():
     print(r.content)
     print(r.status_code)
 
+
 def get_orders():
     r = requests.post(
         base_url + '/check_orders', 
@@ -31,14 +34,6 @@ def get_orders():
     print(r.content)
     print(r.status_code)
 
-def add_new_user():
-    r = requests.post(
-        base_url + '/add_customer', 
-        json={
-            "customerID" : "henry", 
-            "password": "theHoover"}
-        )
-    print(r.content)
 
 def delete_order():
     r = requests.post(
@@ -58,9 +53,46 @@ def get_products():
     print(r.content)
 
 
+def add_new_user(user, password):
+    r = requests.post(
+        base_url + '/signup', 
+        json={
+            "customerID" : user, 
+            "password": password}
+        )
+    # assert r.status_code == 201
+
+def multiUserSignup():
+    for i in range(10):
+        t = threading.Thread(target=add_new_user, args=(users[i], passwords[i]))
+        # random start times
+        time.sleep(random.randint(1,5))
+        t.start()
+
+
+def test_login(username, password):
+    r = requests.post(
+        base_url + '/login', 
+        json={"kevin": "123456"})
+    assert r.status_code == 200
+
+
+def multiUserSignup():
+    jobs = []
+    for i in range(10):
+        t = threading.Thread(target=add_new_user, args=(users[i], passwords[i]))
+        jobs.append(t)
+
+    for j in jobs:
+        # random start times
+        time.sleep(random.randint(1,5))
+        j.start()
+
+    for j in jobs:
+        j.join()
+
+    print("Sign ups complete")
+
+
 if __name__ == '__main__':
-    # test_place_order()
-    # add_new_user()
-    # get_orders()
-    delete_order()
-    # get_products()
+    multiUserSignup()
