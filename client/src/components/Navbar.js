@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,10 +23,29 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 2
     },
+
+    button: {
+        '&:hover': {
+            color: '#e91e63',
+        },
+        textDecoration: 'none' 
+    }
 }));
 
 export default function Navbar() {
     const classes = useStyles();
+
+    const history = useHistory();
+    async function handleSignOut(){
+        // set cookie to expire 
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        try {
+            // move use to login page
+            history.push("/login");
+        } catch (e){
+            alert(e.message);
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -33,26 +53,30 @@ export default function Navbar() {
             <Toolbar>
 
                 <Typography variant="h6" className={classes.home}>
-                    <Link href="home" color="inherit">
-                    Home
+                    <Link href="home" color="inherit" className={classes.button}>
+
+                        <Button color="inherit">
+                        Home
+                        </Button>
+                        
                     </Link>
-                </Typography> 
+                </Typography>
                 
-                <Link href="orders" color="inherit">
+                <Link href="orders" color="inherit" className={classes.button}>
                     <Button color="inherit">
                         My Orders
                     </Button>
                 </Link>
 
-                <Link href="login" color="inherit">
-                    <Button color="inherit">
+                <Link href="login" color="inherit" className={classes.button}>
+                    <Button color="inherit" onClick={handleSignOut}>
                         Sign out
                     </Button>
                 </Link>
 
             </Toolbar>
 
-            <Typography variant="h3" align="center" className="mb-3">
+            <Typography variant="h4" align="center" className="mb-3">
                     Concurr B2B Order System
             </Typography> 
 

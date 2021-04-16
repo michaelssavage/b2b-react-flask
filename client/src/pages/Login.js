@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,29 +40,45 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+
+    const history = useHistory();
+
+    async function handleLogin(){
+        // event.preventDefault();
+
+        try {
+            history.push("/home");
+        } catch (e){
+            alert(e.message);
+        }
+    }
+
     const classes = useStyles();
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     function handleSubmit(event){
         event.preventDefault()
-        console.log( 'name:', name, 'Password: ', password); 
         sendLogin()
     }
 
-    const sendLogin = () => {
-        axios.post('http://localhost:5000/api/login', {
-            withCredentials: true,
-            name: name,
-            password: password
-        })
-        .then((response) => {
-            console.log(response);
+    const sendLogin = async () => {
+        try{
+            const res = await axios.post('http://localhost:5000/api/login', {
+                withCredentials: true,
+                name: name,
+                password: password
+            });
 
-        }, (error) => {
-            console.log(error);
-        });
-    }
+            if (res.status === 201){
+                document.cookie = 'id='+name
+                handleLogin();
+            }
+        }catch(err){
+            console.error(err.message);
+            handleMessage("Username Or Password Is Incorrect", "error");
+        }
+    };
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");

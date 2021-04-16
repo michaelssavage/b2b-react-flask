@@ -60,7 +60,7 @@ export default function Orders() {
     const [orders, setOrders] = useState([]);
 
     const user = { 
-        customerID: "gerard"
+        customerID: document.cookie.slice(3)
     };
     
     const getOrder = async () => {
@@ -70,14 +70,10 @@ export default function Orders() {
                 user
                 );
 
-            // console.log(res.data);
-
             const productsArray = res.data;
-            // console.log(productsArray);
 
             let orderList = [];
             for(let i = 0; i < productsArray.length; i++){
-                // console.log(productsArray[i]['customerID']);
 
                 orderList.push(createData(
                     productsArray[i]['product'],
@@ -94,9 +90,7 @@ export default function Orders() {
     };
 
     useEffect(()=>{
-        
-        getOrder()}
-        ,[]);
+        getOrder()},[]);
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
@@ -123,17 +117,13 @@ export default function Orders() {
                     orderID: order
                 }
             );
-            console.log(res.data)
 
-            if (res.data === "success"){
+            if (res.status === 200){
                 handleMessage("Success, order successfully deleted", "success");
-            } 
-            else {
-                handleMessage("Error deleting order", "warning");
             }
-        
         }catch(err){
             console.error(err.message);
+            handleMessage("Error deleting order", "warning");
         }
     getOrder();
     };
@@ -150,13 +140,12 @@ export default function Orders() {
         <>
             <Navbar />
 
-            <Container component="main" maxWidth="xs" className="mt-5">  
-                <Typography align="center" variant="h3"> 
+            <Container component="main" maxWidth="md" className="mt-5"> 
+
+                <Typography align="center" variant="h5" className="mb-2"> 
                     My Orders
                 </Typography>
-            </Container>
 
-            <Container component="main" maxWidth="md" className="mt-5">  
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
 
@@ -167,15 +156,15 @@ export default function Orders() {
                                 Product Name
                             </TableCell>
 
-                            <TableCell className={classes.thCell}>
+                            <TableCell className={classes.thCell} align="center">
                                 Order ID
                                 </TableCell>
 
-                            <TableCell className={classes.thCell}>
+                            <TableCell className={classes.thCell} align="center">
                                 Date Bought
                                 </TableCell>
 
-                            <TableCell className={classes.thCell}>
+                            <TableCell className={classes.thCell} align="center">
                                 Quantity Bought
                                 </TableCell>
 
@@ -197,15 +186,15 @@ export default function Orders() {
                                     {row.product}
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell align="center">
                                     {row.orderID}
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell align="center">
                                     {row.date}
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell align="center">
                                     {row.quantity}
                                 </TableCell>
 

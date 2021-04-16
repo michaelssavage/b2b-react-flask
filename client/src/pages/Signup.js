@@ -1,4 +1,5 @@
 import React, { useState} from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,7 +12,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from "axios"
 
-    const useStyles = makeStyles((theme) => ({
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -29,9 +37,21 @@ import axios from "axios"
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-    }));
+}));
 
-    export default function Signup() {
+export default function Signup() {
+
+    const history = useHistory();
+
+    async function handleSignUp(){
+        // event.preventDefault();
+
+        try {
+            history.push("/login");
+        } catch (e){
+            alert(e.message);
+        }
+    }
     const classes = useStyles();
 
     const [name, setName] = useState("");
@@ -43,21 +63,41 @@ import axios from "axios"
         sendSignUp()
     }
 
-    const sendSignUp = () => {
+    const sendSignUp = async () => {
+        try{
+            const res = await axios.post('http://localhost:5000/api/signup', {
+                withCredentials: true,
+                name: name,
+                password: password
+            });
 
-        axios.post('http://localhost:5000/api/signup', {
+            if (res.status === 201){
+                handleMessage("Account Successfully Created", "success");
+                setTimeout(() => {  
+                    handleSignUp(); 
+                }, 1000);
+            }
+        }catch(err){
+            console.error(err.message);
+            handleMessage("This User Already Exists", "error");
+        }
+    };
 
-            withCredentials: true,
-            name: {name},
-            password: {password}
-        })
-        .then((response) => {
-            console.log(response);
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [alertStyle, setAlertStyle] = useState("success");
+    const handleMessage = (text, alert) => {
+        setAlertStyle(alert);
+        setMessage(text);
+        setOpen(true);
+    };
 
-        }, (error) => {
-            console.log(error);
-        });
-    }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -123,6 +163,14 @@ import axios from "axios"
             </Grid>
             </form>
         </div>
+
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+
+            <Alert onClose={handleClose} severity={alertStyle}>
+                {message}
+            </Alert>
+        </Snackbar>
+
         </Container>
     );
 }

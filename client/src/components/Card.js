@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     projection: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center"
+        justifyContent: "center",
     }
 }));
 
@@ -51,25 +51,23 @@ export default function ProductCard({ product }) {
     const [projection, setProjection] = useState(0);
     const getProjection = async (currentDate) => {
         try{
-
-            // console.log(currentDate);
             const res = await axios.post("http://localhost:5000/api/availability_future", 
                 {
                     product: product.productName,
                     date: currentDate
                 }
             );
-            console.log({
-                product: product.productName,
-                date: date
-            });
+            // console.log({
+            //     product: product.productName,
+            //     date: date
+            // });
 
-            console.log({
-                    product: product.productName,
-                    date: currentDate
-                });
+            // console.log({
+            //         product: product.productName,
+            //         date: currentDate
+            //     });
 
-            console.log(res);
+            // console.log(res);
 
             setProjection(res.data);
         }catch(err){
@@ -88,7 +86,7 @@ export default function ProductCard({ product }) {
                         </Card.Title>
 
                         <ListGroup variant="flush">
-                            <ListGroup.Item>Stock Quantity: {product.stock_quantity}</ListGroup.Item>
+                            <ListGroup.Item>Current Stock: {product.stock_quantity}</ListGroup.Item>
                             <ListGroup.Item>Monthly Restock Date: {product.monthly_restock_date}</ListGroup.Item>
                             <ListGroup.Item>Restock Quantity: {product.restock_quantity}</ListGroup.Item>
                         </ListGroup>
@@ -124,7 +122,7 @@ export default function ProductCard({ product }) {
                                 </Select>
                             </FormControl>
 
-                            <Typography className={classes.projection}>
+                            <Typography className={classes.projection} align="center">
                                 Projections for {product.productName}: {projection}
                             </Typography>
                         </AccordionDetails>

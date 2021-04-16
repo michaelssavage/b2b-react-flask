@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(2),
             width: '25ch',
-            },
-    },
+        },
+    }
 }));
 
 var productDropdown = {};       // dict[value] = label
@@ -75,7 +75,7 @@ export default function Home() {
         }
     };
 
-    const [productOrder, setProductOrder] = useState('p1');
+    const [productOrder, setProductOrder] = useState('');
     const handleChange = (event) => {
         setProductOrder(event.target.value);
     };
@@ -88,11 +88,7 @@ export default function Home() {
     let today = moment();
     const [selectedDate, setSelectedDate] = useState(today._d);
     const handleDateChange = (date) => {
-        if(moment(date).isAfter(today)){
-            setSelectedDate(date);
-        } else {
-            setSelectedDate(today);
-        }
+        setSelectedDate(date);
     };
 
     const [open, setOpen] = useState(false);
@@ -112,32 +108,29 @@ export default function Home() {
     };
 
     const PlaceNewOrder = async () => {
-
         if(quantity === ""){
             handleMessage("Make Sure You Enter A Quantity", "info");
         } else {
+
             try{
                 const res = await axios.post('http://localhost:5000/api/order',
                     {
-                        customerID: "gerard",
+                        customerID: document.cookie.slice(3),
                         product_name: productDropdown[productOrder] + "",
                         quantity: quantity,
                         day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
-                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+                        month: moment(selectedDate, 'DD/MM/YYYY').format('MM'),
+                        year: moment(selectedDate, 'DD/MM/YYYY').format('MM')
                     }
                 );
-                console.log(res);
-    
-                if (res.data === "success"){
+                if (res.status === 200){
                     handleMessage("Order Successful, sufficient stock!", "success");
                     setQuantity("");
-                } 
-                else {
-                    handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
                 }
                 getProduct();
             }catch(err){
                 console.error(err.message);
+                handleMessage("Sorry, not enough stock to fulfil your order!", "warning");
             }
         }
     };
