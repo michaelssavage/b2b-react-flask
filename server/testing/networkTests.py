@@ -24,7 +24,7 @@ def add_new_user(user, password):
     r = requests.post(
         base_url + '/signup', 
         json={
-            "customerID" : user, 
+            "name" : user, 
             "password": password}
         )
     assert r.content != None
@@ -100,7 +100,7 @@ def multiUserStockCheck():
 
 
 def test_place_order(user):
-    products = ['Game Boy', 'Apples', 'Oranges', 'Lemons', 'Maltesers', 'Fizzy Drinks']
+    products = ['Game Boy', 'Apples', 'Oranges', 'Champion Milk', 'Maltesers', 'Fizzy Drinks']
     product = random.choice(products)
     quantity = random.randint(1, 10)
     day = random.randint(1,28)
@@ -111,18 +111,21 @@ def test_place_order(user):
         json={
             "customerID" : user, 
             "product_name": product, 
-            "quantity" : quantity, 
+            "quantity" : 1, 
             "day": day, 
             "month": month
             }
         )
     assert r.content != None
-    assert r.status_code == 201
+    assert r.status_code == 200
 
 def multiUserOrder():
     jobs = []
-    for i in range(10):
-        t = threading.Thread(target=test_place_order, args=(users[i],))
+    # 100 orders
+    for i in range(100):
+        # 10 users
+        j = i % 10
+        t = threading.Thread(target=test_place_order, args=(users[j],))
         jobs.append(t)
 
     for j in jobs:
@@ -162,4 +165,6 @@ def multiUserGetOrders():
 
     
 if __name__ == '__main__':
+    # multiUserGetOrders()
+    # multiUserOrder()
     multiUserGetOrders()

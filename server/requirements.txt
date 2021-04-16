@@ -1,7 +1,5 @@
 Flask
 requests
-flask-login
 Flask-Cors
-Flask-HTTPAuth
 pandas
 readerwriterlock

@@ -54,7 +54,7 @@ def login():
 def signup():
     if request.method == 'POST':
         data = request.get_json()
-        customerID = data['customerID']
+        customerID = data['name']
         password = data['password']
 
         if loginHandler.signUp(customerID, password):
