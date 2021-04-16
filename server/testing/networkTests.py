@@ -60,20 +60,17 @@ def add_new_user(user, password):
             "customerID" : user, 
             "password": password}
         )
-    # assert r.status_code == 201
-
-def multiUserSignup():
-    for i in range(10):
-        t = threading.Thread(target=add_new_user, args=(users[i], passwords[i]))
-        # random start times
-        time.sleep(random.randint(1,5))
-        t.start()
+    assert r.status_code == 201
 
 
 def test_login(username, password):
     r = requests.post(
         base_url + '/login', 
-        json={"kevin": "123456"})
+        json={
+            'name': username,
+            'password': password
+            }
+        )
     assert r.status_code == 200
 
 
@@ -85,7 +82,7 @@ def multiUserSignup():
 
     for j in jobs:
         # random start times
-        time.sleep(random.randint(1,5))
+        # time.sleep(random.randint(1,5))
         j.start()
 
     for j in jobs:
@@ -93,6 +90,22 @@ def multiUserSignup():
 
     print("Sign ups complete")
 
+def multiUserLogin():
+    jobs = []
+    for i in range(10):
+        t = threading.Thread(target=test_login, args=(users[i], passwords[i]))
+        jobs.append(t)
+
+    for j in jobs:
+        # random start times
+        time.sleep(random.randint(1,5))
+        j.start()
+
+    for j in jobs:
+        j.join()
+
+    print("Log ins complete")
+
 
 if __name__ == '__main__':
-    multiUserSignup()
+    multiUserLogin()
