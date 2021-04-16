@@ -1,6 +1,5 @@
 @echo ON
-where node || echo Node.js not installed
-call npm -v
+where node || echo NodeJS not installed
 cd client
 call npm install
 call npm start
