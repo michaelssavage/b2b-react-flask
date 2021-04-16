@@ -6,18 +6,22 @@ import csv
 import threading
 import datetime
 import pandas as pd
+from readerwriterlock import rwlock
 
-lock = threading.Lock()
+# LOCKS
+# a fair priority lock
+a = rwlock.RWLockFairD()
 
 # Custom packages
 from orders import Order
-from users import User, loginHandler
 from products import Product
-from users import Users
+from users.Users import Users
+from users import loginHandler
+
 
 app = Flask(__name__)
-app.secret_key = 'super secret string'  # Change this!
-loginHandler = loginHandler.LoginHandler()
+loginHandler = loginHandler.LoginHandler(a)
+
 cors = CORS(
     app, 
     supports_credentials=True, 
@@ -30,13 +34,6 @@ cors = CORS(
         }
     )
 
-users = {'forehead': {'password': 'secret'}}
-
-# @app.after_request
-# def middleware_for_response(response):
-#     # Allowing the credentials in the response.
-#     response.headers.add('Access-Control-Allow-Credentials', 'true')
-#     return response
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -51,6 +48,7 @@ def login():
 
     # unauthorised
     return make_response(jsonify("Username Or Password Is Incorrect"), 401)
+
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -71,7 +69,7 @@ def signup():
 def home():
     # read products file
     if (request.method == 'GET'):
-        return Product.getproducts()
+        return Product.getproducts(a)
     else:
         return make_response()
 
@@ -84,6 +82,7 @@ def check_availability_future():
         product = data['product']
         timePeriod = data['date']
         result = Product.getFutureAvailability(
+                    a,
                     product, 
                     int(timePeriod)
                 )
@@ -113,9 +112,9 @@ def place_order():
 
         order_date = datetime.datetime(datetime.datetime.now().year, month, day)
         
-        cust_order = Order.Order(customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
+        cust_order = Order.Order(a, customerID, product, order_date.strftime("%d/%m/%Y"), quantity)
         
-        result = Order.placeOrder(cust_order)
+        result = Order.placeOrder(a, cust_order)
         return jsonify(result)
 
 
@@ -125,7 +124,7 @@ def check_orders():
         # parse and return order file
         data = request.get_json()
         customerID = data['customerID']
-        return Order.getUserOrders(customerID)
+        return Order.getUserOrders(a, customerID)
     
 
 @app.route("/api/delete_order", methods=["POST"])
@@ -136,7 +135,7 @@ def delete_order():
         customerID = data['customerID']
         order_ID = data['orderID']
         # print(customerID, order_ID)        
-        return jsonify(Order.deleteUserOrder(customerID, order_ID))
+        return jsonify(Order.deleteUserOrder(a, customerID, order_ID))
 
 
 @app.route("/api/add_customer", methods=["POST"])
@@ -145,7 +144,7 @@ def add_user():
         data = request.get_json()
         customerID = data['customerID']
         password = data['password']
-        result = Users.add_new_customer(customerID, password)
+        result = Users.add_new_customer(a, customerID, password)
         return jsonify(result)
 
 
