@@ -1,1 +1,4 @@
 customerID,orderID,product,quantity,date
+test,952,Apples,67,11/06/2021
+test,578,Game Boy,49,19/06/2021
+user,660,Oranges,20,24/04/2021

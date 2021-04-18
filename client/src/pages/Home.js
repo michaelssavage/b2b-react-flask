@@ -120,7 +120,7 @@ export default function Home() {
                         quantity: quantity,
                         day: moment(selectedDate, 'DD/MM/YYYY').format('DD'),
                         month: moment(selectedDate, 'DD/MM/YYYY').format('MM'),
-                        year: moment(selectedDate, 'DD/MM/YYYY').format('MM')
+                        year: moment(selectedDate, 'DD/MM/YYYY').format('YYYY')
                     }
                 );
                 if (res.status === 200){
