@@ -1,5 +1,13 @@
 # B2B ordering system with ReactJS and Flask
 
+# Video Walkthrough
+
+<p align="center">
+    <a href="https://youtu.be/QR2c3D1hUAM" target="_blank"><img src="http://img.youtube.com/vi/QR2c3D1hUAM/0.jpg" 
+    alt="CA4006 Assignment" width="300" height="240" border="10" /></a>
+
+</p>
+
 ## Versions
 NodeJS needs to be installed to run the client with npm and Python needs to be installed to run the Flask server. Applications current versions:
 1. **npm -v** - 6.14.8
